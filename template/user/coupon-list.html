@@ -1,0 +1,57 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block title %}Coupons{% endblock title %}
+{% block content %}
+<section class="section-pagetop bg">
+    <div class="container">
+        <h4 class="title-page">Coupons</h4>
+    </div> <!-- container //  -->
+</section>
+<section class="section-content padding-y">
+    <div class="container">
+        <h6>Available Coupons</h6>
+        {% include 'include/alerts.html' %}
+        {% for unused_coupon in unused_coupons %}
+        <div class="row py-2 ">
+            <div class="card col-md-12 shadow-sm">
+                
+                
+                <div class="card-body">
+                    <strong class="d-inline-block mr-3">{{unused_coupon.coupon_code}}</strong>
+                    <p>{{unused_coupon.description}} </p>
+                    <p>You should purchase for minimum of ₹{{unused_coupon.minimum_amount}}   </p>
+                    <p>Discount amount you would get ₹{{unused_coupon.discount}} </p>
+                    <p>Valid From:{{unused_coupon.valid_from}} </p>
+                    <p>Valid To:{{unused_coupon.valid_to}} </p>
+                </div>
+                
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+<section class="section-content padding-y">
+    <div class="container">
+        <h6>Used Coupons</h6>
+        {% include 'include/alerts.html' %}
+        {% for user_coupon in user_coupons %}
+        <div class="row py-2 ">
+            <div class="card col-md-12 shadow-sm">
+                
+                
+                <div class="card-body">
+                    <strong class="d-inline-block mr-3">{{user_coupon.coupon.coupon_code}}</strong>
+                    <p>{{user_coupon.coupon.description}} </p>
+                    <p>You should purchase for minimum of ₹{{user_coupon.coupon.minimum_amount}}   </p>
+                    <p>Discount amount you would get ₹{{user_coupon.coupon.discount}} </p>
+                    <p>Valid From:{{user_coupon.coupon.valid_from}} </p>
+                    <p>Valid To:{{user_coupon.coupon.valid_to}} </p>
+                </div>
+                
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock content %}

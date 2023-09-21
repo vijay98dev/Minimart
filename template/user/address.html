@@ -1,0 +1,39 @@
+{% extends 'user/base.html' %}
+{% load static %} 
+{% block titile %}Address{% endblock titile %}
+{% block content %}
+<div class="mt-5 mb-5" style="padding-left: 100px;">
+    <div class="row">
+      {% include 'include/sidebar.html' %}
+  
+      <div class="col-md-9">
+        <h4 class="card-title" style=""><b>Addresses</b></h4>
+        {% for data in profile %}
+  
+        <div class="card">
+          <div class="p-3 py-5">
+            <div class="col-12"></div>
+  
+            <div class="col">
+              <h6 class="card-subtitle mb-2 text-muted">
+                <p class="card-text text-muted small">
+                  <b>
+                    {% comment %} {{data.name}}&nbsp&nbsp&nbsp&nbsp&nbsp{{profile.phone_number}}
+                    <br /> {% endcomment %}
+                    {{data.first_name}}{{data.last_name}}&nbsp&nbsp&nbsp&nbsp&nbsp<br>{{data.address}}&nbsp&nbsp&nbsp&nbsp&nbsp
+                    {{profile.house_no}}&nbsp&nbsp&nbsp&nbsp&nbsp<br>{{data.street}}
+                    &nbsp&nbsp&nbsp&nbsp&nbsp<br>{{data.city}}&nbsp&nbsp&nbsp&nbsp&nbsp
+                    {{data.state}}&nbsp&nbsp&nbsp&nbsp&nbsp<br>{{data.country}}&nbsp&nbsp-&nbsp&nbsp{{data.pin_code }}
+                  </b>
+                </p>
+              </h6>
+            </div>
+            <a href="{% url 'edit-address' data.id %}" class="btn btn-info btn-sm">Edit</a>
+            <a href="{% url 'delete-address' data.id %}" class="btn btn-danger btn-sm">Delete</a>
+          </div>
+        </div>
+        <br />
+        {% endfor %}
+      </div>
+    </div>
+  </div>{% endblock content %}

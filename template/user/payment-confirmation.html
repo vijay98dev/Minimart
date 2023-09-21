@@ -1,0 +1,169 @@
+{% extends 'user/base.html' %} 
+{% load static %}
+{% block content %}
+
+<main>
+  <br></br>
+  
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  
+  <div class="video-area" 
+  style="max-width: 1300px; height: 700px">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-lg-12 d-flex justify-content-center align-items-center">
+          <div class="text-center">
+          </div>
+          <div>
+            <img
+              src="{% static 'admin\assets\img\logo\Small-Icon-Images-91.webp' %}"
+              alt="Image"
+              class="img-fluid mx-auto"
+              style="max-width: 200px; height: 200px"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <br></br>
+    
+    <h2 class="text-center font-weight-bold" style="font-size: 44px">
+      Choose payment method
+    </h2>
+    <div class="card mb-4 mb-lg-0">
+      <div class="card-body">
+        <li class="checkout-item">
+          <div class="avatar checkout-icon p-1">
+            <div class="avatar-title rounded-circle bg-primary">
+              <i class="bx bxs-wallet-alt text-white font-size-20"></i>
+            </div>
+          </div>
+          <div class="feed-item-list">
+            <div>
+              <h5 class="font-size-16 mb-1">Payment Info</h5>
+              <p class="text-muted text-truncate mb-4">
+                Select the payment method
+              </p>
+            </div>
+            <div>
+              <form action="{% url 'create-order' %}" method="post">
+                {% csrf_token %}
+                <h5 class="font-size-14 mb-3">Payment methods :</h5>
+              <div class="row">
+                <div class="col-lg-3 col-sm-6">
+                  <div>
+                    <label class="card-radio-label">
+                      <input
+                        type="radio"
+                        type="submit"
+                        name="pay-method"
+                        id="pay-methodoption3"
+                        class="card-radio-input"
+                        value="cod"/>
+  
+                      <span class="card-radio py-3 text-center text-truncate">
+                        <i class="bx bx-money d-block h2 mb-3"></i>
+                        <span>Cash on Delivery</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+  
+                <div class="col-lg-3 col-sm-6">
+                  <div>
+                    <label class="card-radio-label card-radio-button-label">
+                      <input
+                        type="radio"
+                        type="submit"
+                        name="pay-method"
+                        id="rzp-button1"
+                        class="card-radio-input"
+                        value="razorpay"/>
+  
+                      <span
+                        class="card-radio-button py-3 text-center text-truncate">
+                        <i class="bx bx-money d-block h2 mb-3"></i>
+                        <span>Razorpay</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <button type="submit" class="btn btn-primary btn-sm" name="payment_submit">Place Order</button>
+            </form>
+            </div>
+          </div>
+        </li>
+      </div>
+    </div>
+    <p class="text-center"></p>
+  </div>
+  <style>
+    /* Style for the video-area */
+    .video-area {
+      border: 2px solid #ccc;
+      padding: 20px;
+      width: 80%; /* Set a relative width */
+      max-width: 1300px; /* Set a maximum width */
+      height: 600px;
+      margin: 0 auto; /* Center the div horizontally */
+    }
+  </style>
+
+</main>
+
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+    var options = {
+        "key": "rzp_test_Yhyp50af6R4HJ6", // Enter the Key ID generated from the Dashboard
+        "amount": "{{razorpay_payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "MiniMart",
+        "description": "Thanks",
+        "image": "http://127.0.0.1:8000/static/assets/img/logo/time.png",
+        "order_id": "{{razorpay_payment.id}}", 
+        "handler": function (response){
+    
+        window.location.href = `http://127.0.0.1:8000/confirmation/?razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`;
+    
+           
+        },
+    
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script>
+
+
+{% endblock content %}
+<!-- ... Your existing code ... -->

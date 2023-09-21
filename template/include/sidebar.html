@@ -1,0 +1,39 @@
+<aside class="col-md-2">
+    <!--   SIDEBAR   -->
+    <ul class="list-group">
+      <a class="list-group-item" href="{% url 'profile' %}"> Account </a>
+      <a class="list-group-item" href="{% url 'my-order' %}"> My Orders </a>
+      <a class="list-group-item" href="{% url 'wishlist' %}"> Wishlist </a>
+      <a class="list-group-item" href="{% url 'coupon-list' %}"> Coupons </a>
+      <a class="list-group-item" href="{% url 'add-address' %}"> Add Address </a>
+      <a class="list-group-item" href="{% url 'address' %}"> Manage Address </a>
+      <a class="list-group-item" href="{% url 'reset' %}"> Reset Password </a>  
+    </ul>
+    <br>
+    <a class="btn btn-light btn-block" href="{% url 'signout'  %} " id="userlogoutbtn"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a>
+    <!--   SIDEBAR .//END   -->
+  </aside>  
+
+  <style>
+    /* Style for sidebar list items */
+    .list-group-item {
+        color: black;
+        font-weight: bold;
+
+    }
+
+    /* Style for sidebar buttons */
+    .btn-light {
+        color: black;
+        font-weight: bold;
+
+    }
+    .list-group-item:hover,
+    .btn-light:hover {
+        color: #ff2020;
+    } 
+    .list-group-item.active {
+      color: #000000;
+      background-color: #ff2020;
+  }
+</style>

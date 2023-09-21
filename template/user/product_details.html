@@ -1,0 +1,143 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block title %}Product Details{% endblock title %}
+{% block content %}
+
+
+<section class="section-content padding-y bg">
+    <div class="container">
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="card">
+        <div class="row no-gutters">
+            <aside class="col-md-6">
+    <article class="gallery-wrap"> 
+        <div class="row isotope-grid">
+					
+            {% for p in products  %}
+            <a href="{% url 'singproduct' p.productsize.first.id%}">
+            <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+                <!-- Block2 -->
+                <div class="block2"> 
+                    <div class="block2-pic hov-img0">
+                        <img src="{{ p.images.first.image.url}}" alt="IMG-PRODUCT">
+
+                        {% comment %} <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                            Quick View
+                        </a> {% endcomment %}
+                    </div>
+
+                    <div class="block2-txt flex-w flex-t p-t-14">
+                        <div class="block2-txt-child1 flex-col-l ">
+                            <h5>{{p.name}}</h5>
+                    
+                        
+                            <span class="stext-105 cl3">
+                                ${{p.productsize.first.price}}
+                            </span>
+                            <span class="stext-105 cl3">
+                                 {{p.subcategory.name}}
+                            </span>
+                            <span class="stext-105 cl3">
+                                color:{{p.color}}
+                            </span>
+                        </div>
+                        <div class="block2-txt-child2 flex-r p-t-3">
+                            <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                                <img class="icon-heart1 dis-block trans-04" src="{% static 'static_user/images/icons/icon-heart-01.png' %}" alt="ICON">
+                                <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'static_user/images/icons/icon-heart-02.png' %}" alt="ICON">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+            {% endfor %}
+    
+        </div>
+        {% comment %} <div class="img-big-wrap">
+            <div class="magnify"> 
+           <a href="#"><img src="{{single_product.product_image.url}}"></a>
+            </div>
+        </div> <!-- img-big-wrap.// --> {% endcomment %}
+        
+    </article> <!-- gallery-wrap .end// -->
+            </aside>
+            <main class="col-md-6 border-left">
+
+    <form action="{% url 'add_cart' single_product.product_size.id %}" method="post">
+{% csrf_token %}
+
+      <article class="content-body">
+      
+      <h2 class="title">{{single_product.product.product_name}}</h2>
+      <div class="mb-3"> 
+          <var class="price h4">₹<span id="displayedPrice">{{single_product.product_size.price}}</span></var> 
+      </div> 
+      <p>{{single_product.product.description}}</p>
+      
+      
+      <hr>
+          <div class="row">
+          </div> <!-- row.// -->
+          <div class="row">
+              <div class="item-option-select">
+                  <h6>Select Size</h6>
+                  
+                  <select class="form-control text-black" id="size" name="size" required>
+                    <option  value="" disabled selected>Select a Size</option>  
+                    {% for d in size  %}
+                    <option value="{{ d.id }}" data-price="{{ d.product_size.price }}" > {{ d.product_size }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+          </div> <!-- row.// -->
+          <hr>
+          
+            {% if single_product.product_size__stock <= 0 %}
+                <h4> Out Stock </h4>
+            {% else %} 
+                <button type="submit" class="btn btn-sm  btn-primary"> <span class="text">Add to Cart</span> <i class="fas fa-shopping-cart"></i>  </button>
+                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    {% if single_product.product_size.id.in__wishlist %}
+                        <a href="{% url 'remove-wishlist' single_product.product_size.id %}" class="btn btn-sm btn-danger">Remove form wishlist</a>
+                    {% else %}
+                        <a href="{% url 'add-wishlist' single_product.product_size.id %}" class="btn btn-sm btn-primary">Add to wishlist</a>
+                    {% endif %}
+            {% endif %}
+      </article> <!-- product-info-aside .// -->
+
+  </form>
+            </main> <!-- col.// -->
+        </div> <!-- row.// -->
+    </div> <!-- card.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    
+    <br>
+
+    <div class="row">
+                
+    </div> <!-- row.// -->
+    
+    
+    </div> <!-- container .//  -->
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const sizeSelect = document.getElementById("size");
+    const displayedPrice = document.getElementById("displayedPrice");
+    const defaultPrice = parseFloat("{{single_product.product_size.price}}"); 
+
+    // Event listener to update price when size is selected
+    sizeSelect.addEventListener("change", function () {
+        const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+        const price = parseFloat(selectedOption.getAttribute("data-price")) || defaultPrice;
+        displayedPrice.textContent =  price.toFixed(2); // Update displayed price
+    });
+});
+</script>
+
+
+{% endblock content %}

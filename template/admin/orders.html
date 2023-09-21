@@ -1,0 +1,73 @@
+{% extends 'admin/admin_dashboard.html' %} 
+{% load static %}
+{% block title%}Orders{% endblock title %}
+
+{% block content %}
+
+<section class="section-conten padding-y" style="min-height: 84vh">
+  <!-- ============================ COMPONENT LOGIN   ================================= -->
+  <div class="card mx-auto" style="max-width: 1000px; margin-top: 100px">
+    <div class="card-body">
+      <h4 class="card-title mb-4">Orders</h4>
+      {% comment %} <button class="btn btn-primary" onclick="exportToExcel()">
+        Excel &nbsp<i class="far fa-file-pdf text-light"></i>
+      </button>
+      <button class="btn btn-primary" id="pdfButton">
+        PDF &nbsp<i class="far fa-file text-light"></i>
+      </button> {% endcomment %}
+      <table class="table table-sm" id="sales_report">
+        <thead>
+          <tr>
+              <th>Id</th>
+              <th>Order Number</th>
+              <th>User</th>    
+              <th>Order Total</th>    
+              <th>Is Paid</th>       
+              <th>Status</th>    
+              <th>Action</th>    
+              {% comment %} <th>Sub_total</th> 
+              <th>Tax</th>    
+              <th>Discount</th>     
+              <th>Total Amount</th>      {% endcomment %}
+          </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+          <tr>
+            <td>{{forloop.counter}}</td> 
+            <td><a herf="{% url 'order_details' order.id %}">{{order.order_number}}</a></td>
+            <td>{{order.user.username}}</td> 
+            <td>{{order.order_total}} </td>
+            <td>
+                {% if order.is_paid is True %}
+                Yes
+                {% else %}
+                No
+                {% endif %}</td>
+            <td>{{ order.status }}</td>                  
+            <td><form class="update-status-form" method="post" action="{% url 'update_order' order.id %}">
+                {% csrf_token %}
+                <div class="input-group">
+                  <select class="form-select" name="order_status" width="10px">
+                    {% for choice in order.ORDER_STATUS %}
+                      <option value="{{ choice.0 }}" {% if order_item.order_status == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                    {% endfor %}
+                  </select>
+                  <button class="btn btn-primary btn-sm" type="submit">Update Status</button>
+                </div>
+              </form></td>                  
+          </tr>
+          {% endfor %}
+         
+        </tbody>
+      </table>
+      {% include 'include/alerts.html' %}
+      
+    </div>
+    <!-- card-body.// -->
+  </div>
+  <!-- card .// -->
+
+  <!-- ============================ COMPONENT LOGIN  END.// ================================= -->
+</section>
+{% endblock content %}

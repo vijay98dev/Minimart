@@ -1,0 +1,51 @@
+{% extends 'admin/category.html' %}
+{% load static %}
+{% block titile %}Add Coupon{% endblock titile %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <div class="card">
+                {% include 'include/alerts.html' %}
+                <div class="card-header">
+                    <h3 class="card-title" style="margin-top: 40px;">Add Coupon</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'add-coupon' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name">Coupon Code:</label>
+                            <input type="text" class="form-control" id="coupon_code" name="coupon_code" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description:</label>
+                            <input type="text" name="description" class="form-control" rows="4" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="stock">Minimum Amount:</label>
+                            <input type="number" class="form-control" id="minimum_amount" name="minimum_amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="size">Discount Amount:</label>
+                            <input type="number" class="form-control" id="discount" name="discount" required>
+                        </div> 
+                        <div class="form-group">
+                            <label for="category">Valid From:</label>
+                            <input type="date" class="form-control" id="valid_from" name="valid_from" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Valid To:</label>
+                            <input type="date" class="form-control" id="valid_to" name="valid_to"  required>
+                        </div>
+                        <div class="text-center"> <!-- Center the form -->
+                            <button type="submit" class="btn btn-sm btn-primary mt-4">Submit</button>
+                            <a href="{% url 'coupon' %}" class="btn btn-sm btn-secondary mt-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %} 

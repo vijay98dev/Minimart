@@ -1,0 +1,30 @@
+{% extends 'admin/category.html' %}
+{% load static %}
+{% block title %}Add Image{% endblock title %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title" style="margin-top: 70px;">Add Images</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'add-images' variant.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="image">Product Image:</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*" required multiple>
+                        </div>
+                        <div class="text-center"> <!-- Center the form -->
+                            <button type="submit" class="btn btn-sm btn-primary mt-4">Submit</button>
+                            <a href="{% url 'product-images' variant.id %}" class="btn btn-sm btn-secondary mt-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %} 

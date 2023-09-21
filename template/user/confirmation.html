@@ -1,0 +1,128 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block title %}Confirmation{% endblock title %}
+{% block content %}
+  <main>
+    {% comment %} <h2 class="text-center font-weight-bold" style="font-size: 44px;">Confirmation</h2> {% endcomment %}
+
+    <!-- Hero Area Start-->
+    <div class="video-area">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-lg-12 d-flex justify-content-center align-items-center">
+            <div class="text-center">
+              <!-- You can add content here if needed -->
+            </div>
+            <div>
+              <br></br>
+                <img
+                src="{% static 'images\icons\subtract.svg' %}"
+                alt="Image"
+                class="img-fluid mx-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <br></br>
+      <h2 class="text-center font-weight-bold" style="font-size: 44px;">Order Confirmed</h2>
+      <p class="text-center">Your Order is Confirmed. You Will receive an order comformation email/SMS 
+  Shortly with the expect delivery date for your items. </p>
+  <div class="button-container row justify-content-center">
+    <div class="col-md-2 col-sm-4">
+      <a href="{% url 'index' %}" class="btn custom-button btn-block">Home</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+      <a href="{% url 'my-order' %}" class="btn custom-button btn-block">Orders</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+      <a href="{% url 'invoice' order.id %}" class="btn custom-button btn-block">Invoice</a>
+    </div>
+  </div>
+  
+    </div>
+    
+    {% comment %} <div class="video" style="margin-top: 50px;">
+
+      <a href="" class="button-link">Invoice</a>
+    </div> {% endcomment %}
+<style>/* Style for the video-area */
+  .video-area {
+    border: 2px solid #ccc;
+    padding: 20px;
+    width: 80%; /* Set a relative width */
+    max-width: 1300px; /* Set a maximum width */
+    height: 600px;
+    margin: 0 auto; /* Center the div horizontally */
+  }
+  .video {
+    border: 2px solid #ccc;
+    padding: 20px;
+    width: 80%; /* Set a relative width */
+    max-width: 1300px; /* Set a maximum width */
+    height: 300px;
+    margin: 0 auto; /* Center the div horizontally */
+  }
+
+
+  </style>    
+    
+
+      <!--================ confirmation part start =================-->
+
+      {% comment %} <div class="card mb-4 mb-lg-0">
+        <div class="card-body">
+          <h4>Delivering To</h4>
+        </br>
+        {% for add in address%}
+        <span class="fs-14 mb-2 d-block">
+          {{add.phone_number}}
+        </span>
+    
+        <span
+          class="text-muted fw-normal text-wrap mb-1 d-block"
+          >{{add.address}}</span
+        >
+        <span
+          class="text-muted fw-normal text-wrap mb-1 d-block"
+          >{{add.country}},{{add.state}}</span
+        >
+        <span
+          class="text-muted fw-normal text-wrap mb-1 d-block"
+          >{{add.street}},{{add.pin_code}}</span
+        >
+        {%endfor%}
+        </div>
+      </div> {% endcomment %}
+      <!--================ confirmation part end =================-->
+      {% comment %} <div class="shop-method-area" style="padding-top: 40px">
+        <div class="container">
+          <div class="method-wrapper">
+            <div class="row d-flex justify-content-between">
+              <div class="col-xl-4 col-lg-4 col-md-6">
+                <div class="single-method mb-40">
+                  <i class="ti-package"></i>
+                  <h6>Free Shipping Method</h6>
+                  <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
+                </div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6">
+                <div class="single-method mb-40">
+                  <i class="ti-unlock"></i>
+                  <h6>Secure Payment System</h6>
+                  <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
+                </div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6">
+                <div class="single-method mb-40">
+                  <i class="ti-reload"></i>
+                  <h6>Secure Payment System</h6>
+                  <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> {% endcomment %}
+  </main>
+  {% endblock content %}

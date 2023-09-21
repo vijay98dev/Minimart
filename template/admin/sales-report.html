@@ -1,0 +1,112 @@
+{% extends 'admin/admin_dashboard.html' %} 
+{% load static %}
+{% block title%}Sales Report{% endblock title %}
+
+{% block content %}
+
+<section class="section-conten padding-y" style="min-height: 84vh">
+  <!-- ============================ COMPONENT LOGIN   ================================= -->
+  <div class="card mx-auto" style="max-width: 900px; margin-top: 100px">
+    <div class="card-body">
+      <h4 class="card-title mb-4">Sales Report</h4>
+      <button class="btn btn-primary" onclick="exportToExcel()">
+        Excel &nbsp<i class="far fa-file-pdf text-light"></i>
+      </button>
+      <button class="btn btn-primary" id="pdfButton">
+        PDF &nbsp<i class="far fa-file text-light"></i>
+      </button>
+      <table class="table table-sm" id="sales_report">
+        <thead>
+          <tr>
+              <th>Id</th>
+              <th>Product Name</th>
+              <th>Category</th>    
+              <th>Variants</th>    
+              <th>Price</th>       
+              <th>Quantity</th>    
+              <th>Sub_total</th> 
+              <th>Tax</th>    
+              <th>Discount</th>     
+              <th>Total Amount</th>     
+          </tr>
+        </thead>
+        <tbody>
+            {% for order_item in order_items %}
+          <tr>
+            <td>{{forloop.counter}}</td> 
+            <td>{{order_item.product.product.product_name}}</td> 
+            <td>{{order_item.product.product.category.category_name}}</td>
+            <td>{{order_item.product.product_size}}</td>
+            <td>{{order_item.product.price}}</td>
+            <td>{{order_item.quantity}} </td>
+            <td>{{ order_item.sub_total }}</td>
+            <td>{{ order_item.tax }}</td>
+            <td>{{ order_item.discount_price }}</td>
+            <td>{{ order_item.total_price }}</td>
+          </tr>
+          {% endfor %}
+         
+        </tbody>
+      </table>
+      {% include 'include/alerts.html' %}
+      
+    </div>
+    <!-- card-body.// -->
+  </div>
+  <!-- card .// -->
+
+  <!-- ============================ COMPONENT LOGIN  END.// ================================= -->
+</section>
+<script>
+    function exportToExcel() {
+        console.log(123);
+
+      var data = [
+        ['Sales Report'],
+        ['Sl No', 'Product Name', 'Category', 'Variants', 'Price','Quantity','Sub_total','Tax','Discount','Total Amount']
+        {% for order_item in order_items %}
+        , [{{ forloop.counter }}, '{{order_item.product.product.product_name}}', '{{order_item.product.product.category.category_name}}', '{{order_item.product.product_size}}', '{{order_item.product.price}}', '{{order_item.quantity}}', '{{ order_item.sub_total }}', '{{ order_item.tax }}', '{{ order_item.discount_price }}', '{{ order_item.total_price }}']
+        {% endfor %}
+      ];
+  
+      // Create a CSV string
+      var csvContent = data.map(function(row) {
+        return row.join(',');
+      }).join('\n');
+  
+      // Create a Blob containing the CSV data
+      var blob = new Blob([csvContent], { type: 'text/csv' });
+  
+      // Create a link to download the Blob as a file
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'data.csv'; // You can change the filename here
+      link.style.display = 'none';
+  
+      // Append the link to the document
+      document.body.appendChild(link);
+  
+      // Click the link to trigger the download
+      link.click();
+  
+      // Clean up the link
+      document.body.removeChild(link);
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<script>
+  document.getElementById("pdfButton").addEventListener("click", function () {
+    const table = document.querySelector(".table");
+    const pdfOptions = {
+      margin: 5.25,
+      filename: 'table.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().from(table).set(pdfOptions).save();
+  });
+</script>
+{% endblock content %}

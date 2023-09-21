@@ -1,0 +1,131 @@
+{% extends 'user/base.html' %}
+{% load static %} 
+{% block titile %}Profile{% endblock titile %}
+{% block content %}
+<section class="section-conten padding-y bg" style="padding-top: 20px">
+    <div class="container">
+      <div class="row">
+        {% include 'include/sidebar.html' %}
+        <main class="col-md-9">
+          <article class="card">
+            <header class="card-header">
+              <strong class="d-inline-block mr-3">Wishlist</strong>
+              
+            </header>
+            {% include 'include/alerts.html' %}
+            <table class="table table-sm">
+              {% if wishlist %}
+              <thead>
+                <tr>
+                  <th>Product Image</th>
+                  <th>Product Name</th>    
+                  <th>Price</th>    
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                {% for wishlist in wishlist %}
+              <tr>
+                <td><a href="{% url 'product_details' wishlist.product.product.category.slug wishlist.product.slug %}"><img src="{{ product_image.product_image.url }}" alt="" class="product-image" style="width:70px"></a></td> 
+                <td><a href="{% url 'product_details' wishlist.product.product.category.slug wishlist.product.slug %}">{{wishlist.product.product.product_name}}</a></td> 
+                <td>{{wishlist.product.price}}</td> 
+                <td><a href="{% url 'remove-wishlist' wishlist.product.id %}" class="btn btn-danger btn-sm">Remove </a></td>
+              </tr>
+              {% endfor %}
+              {% else %}
+              <h3>Your Wishlist is Empty<h3>
+                <br>
+              <p>Add Products you wish to purchase</p>
+              <br>
+              <a href="{% url 'store' %}" class="btn btn-primary-light btn-sm">Products</a>
+              {% endif %}
+            </tbody>
+            </table>
+          </article>
+          <!-- order-group.// -->
+        </main>
+      </div>
+      <!-- row.// -->
+    </div>
+  </section>
+  <!-- ========================= SECTION CONTENT END// ========================= -->
+  
+  <div class="mt-5 mb-5" style="padding-left: 100px;">
+    <div class="row">
+      <!-- Sidebar Card -->
+  
+      <!-- User Profile Card -->
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-body">
+            <div
+              class="d-flex flex-column align-items-center text-center p-3 py-5"
+            >
+              <img
+                class="rounded-circle mt-5"
+                width="150px"
+                src="{{ profile.profile_image.url}}"
+              />
+              <span class="font-weight-bold">{{user_profile.user.name}}</span>
+              <span class="text-black-50">{{user_profile.user.phone_number}}</span>
+              <span class="text-black-50">{{user_profile.user.email}}</span>
+              <!-- Additional content here if needed -->
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    body {
+      {% comment %} background: rgb(99, 39, 120); {% endcomment %}
+    }
+  
+    .form-control:focus {
+      box-shadow: none;
+      border-color: #ba68c8;
+    }
+  
+    .profile-button {
+      background: rgb(99, 39, 120);
+      box-shadow: none;
+      border: none;
+    }
+  
+    .profile-button:hover {
+      background: #682773;
+    }
+  
+    .profile-button:focus {
+      background: #682773;
+      box-shadow: none;
+    }
+  
+    .profile-button:active {
+      background: #682773;
+      box-shadow: none;
+    }
+  
+    .back:hover {
+      color: #682773;
+      cursor: pointer;
+    }
+  
+    .labels {
+      font-size: 11px;
+    }
+  
+    .add-experience:hover {
+      background: #ba68c8;
+      color: #fff;
+      cursor: pointer;
+      border: solid 1px #ba68c8;
+    }
+  </style>
+
+
+
+{% endblock content %}

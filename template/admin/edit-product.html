@@ -1,0 +1,42 @@
+{% extends 'admin/category.html' %}
+{% load static %}
+{% block title %}Edit Product{% endblock title %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title" style="margin-top: 70px;">Edit Product</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name">Product Name:</label>
+                            <input type="text" class="form-control" id="name" name="product_name" value='{{products.product_name}}' readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description:</label>
+                            <textarea name="description" class="form-control" rows="4"  value='{{products.description}}'></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category:</label>
+                            <select class="form-control text-black" id="category" name="category" readonly>
+                                <option value="" disabled selected>{{products.category}}</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.category_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="text-center"> <!-- Center the form -->
+                            <button type="submit" class="btn btn-sm btn-primary mt-4">Submit</button>
+                            <a href="{% url 'product' %}" class="btn btn-sm btn-secondary mt-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %} 

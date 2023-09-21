@@ -1,0 +1,54 @@
+{% extends 'admin/admin_dashboard.html' %} 
+{% load static %}
+{% block title%}User Account{% endblock title %}
+
+{% block content %}
+
+<section class="section-conten padding-y" style="min-height: 84vh">
+  <!-- ============================ COMPONENT LOGIN   ================================= -->
+  <div class="card mx-auto" style="max-width: 800px; margin-top: 100px">
+    <div class="card-body">
+      <h4 class="card-title mb-4">Users</h4>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+              <th>Email</th>
+              <th>Username</th>
+              <th>Last Joined</th>
+              <th>Status</th>
+              <th>Actions</th>
+
+          </tr>
+        </thead>
+
+        <tbody>
+            {% for user in users %}
+          <tr>
+            <td>{{user.email}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.last_joined}}</td>
+            <td>{% if user.is_active %}
+                <span class="badge badge-success rounded-pill d-inline text-black-50 text-success">Active</span>
+                {% else %}
+                <span class="badge badge-danger rounded-pill d-inline text-black-50 text-danger">Blocked</span>
+                {% endif %}</td>
+                <td>{% if user.is_active %}
+                  <a href="{% url 'blockuser' user.id  %}"><button type="button" class="btn btn-danger btn-sm">Block</button></a>
+                  {% else %}
+                  <a href="{% url 'unblockuser' user.id  %}"><button type="button" class="btn btn-info btn-sm">Unblock</button></a>
+                  {% endif %}</td>
+          </tr>
+          {% endfor %}
+         
+        </tbody>
+      </table>
+      {% include 'include/alerts.html' %}
+    </div>
+    <!-- card-body.// -->
+  </div>
+  <!-- card .// -->
+
+  <!-- ============================ COMPONENT LOGIN  END.// ================================= -->
+</section>
+
+{% endblock content %}

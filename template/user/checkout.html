@@ -1,0 +1,116 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block title %}Checkout{% endblock title %}
+{% block content %}
+
+
+<section class="section-content padding-y bg">
+    
+    <div class="container">
+    
+    {% include 'include/alerts.html' %}
+    
+    <!-- ============================ COMPONENT 2 ================================= -->
+    <div class="row">
+            <main class="col-md-8">
+    
+    <article class="card mb-4">
+    <div class="card-body">
+        <h4 class="card-title mb-4">Review cart</h4>
+        {% for cart_item in cart_item %}
+        <div class="row">
+            <div class="col-md-6">
+                <figure class="itemside  mb-4">
+                    <div class="aside"><img src="{{cart_item.product.product_image.url}}" style='width:50px;height=50px'></div>
+                    <figcaption class="info">
+                        <p>{{cart_item.product.product.product_name}}</p>
+                        <span class="text-muted">{{cart_item.quantity}}x = ₹{{cart_item.sub_total}} </span>
+                    </figcaption>
+                </figure>
+            </div> <!-- col.// -->
+        </div> <!-- row.// -->
+        {% endfor %}
+    </div> <!-- card-body.// -->
+    </article> <!-- card.// -->
+
+
+    <article class="card mb-4">
+    <div class="card-body">
+        <h4 class="card-title mb-4">Delivery info</h4>
+        <form action="{% url 'create-order' %}" method="post">
+        {% csrf_token %}
+            <div class='mb-3'>
+            <div class='row'>
+            {% for data in address %}
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="address" id="exampleRadios1" value="{{data.id}}" checked>
+                <label class="form-check-label" for="exampleRadios1">
+                    <div class="card-radio text-truncate p-3">
+                        <span class="fs-14 mb-4 d-block"
+                          >Address {{ forloop.counter }}</span>
+                          <span
+                          class="text-muted fw-normal text-wrap mb-1 d-block"
+                          >{{data.first_name}} {{data.last_name}}</span>
+                        <span
+                          class="text-muted fw-normal text-wrap mb-1 d-block"
+                          >{{data.address}}</span>
+                        <span
+                          class="text-muted fw-normal text-wrap mb-1 d-block"
+                          >{{data.country}},{{data.state}}</span>
+                        <span
+                          class="text-muted fw-normal text-wrap mb-1 d-block"
+                          >{{data.street}},{{data.pin_code}}</span>
+                      </div>
+                </label>
+              </div>
+            {% endfor %}
+            </div>
+            </div>
+            <a href="{% url 'add-address' %}?source=checkout" class="btn btn-primary btn-sm">Add Address</a>
+    </div> <!-- card-body.// -->
+    </article> <!-- card.// -->
+    
+            </main> <!-- col.// -->
+            <aside class="col-md-4">
+                <div class="card">
+            <div class="card-body">
+                <dl class="dlist-align">
+                  <dt>Total price:</dt>
+                  <dd class="text-right">₹ {{total}}</dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Tax:</dt>
+                  <dd class="text-right">₹ {{tax}}</dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Discount:</dt>
+                  <dd class="text-right"> ₹{{discount}}</dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Total:</dt>
+                  <dd class="text-right text-dark b"><strong>₹ {{grand_total}}</strong></dd>
+                </dl>
+                <hr>
+                <p class="text-center mb-3">
+                    <img src="{% static './images/misc/payments.png' %}" height="26">
+                </p>
+                <button type="submit" class="btn btn-primary btn-block" name="checkout_submit">Make Payment </button>
+                
+            </div> <!-- card-body.// -->
+            </div> <!-- card.// -->
+            </aside> <!-- col.// -->
+        </div> <!-- row.// -->
+    
+    <!-- ============================ COMPONENT 2 END//  ================================= -->
+    
+    
+    
+    
+    </div> <!-- container .//  -->
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+    
+
+
+
+{% endblock content %}

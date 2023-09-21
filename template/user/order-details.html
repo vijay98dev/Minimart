@@ -1,0 +1,160 @@
+{% extends 'user/base.html' %} 
+{% block title %}Order Details{% endblock title %}
+{% block content %}
+{% load static %}
+<div class="mt-5 mb-5" style="padding-left: 30px">
+  <div class="row">
+    <!-- Sidebar Card -->
+    
+    {% include 'include/sidebar.html' %}
+   
+    <section class="col-md-6">
+      {% include 'include/alerts.html' %}
+      {% for order_items in order_items %}
+      <div class="container py-25 h-50">
+        <div class="card shadow-0 border mb-2">
+          <div class="card-body" style="width: 100px,height:200px">
+            <div class="row">
+              <div class="col-md-2">
+                <a href="">
+                  <img
+                    src="{{ order_items.product_image.product_image.url }}"
+                    alt="Phone"
+                    width="100"
+                    height="120"
+                  />
+                </a>
+              </div>
+
+              <div
+                class="d-flex flex-column justify-content-start align-items-start"
+                style="padding-left: 50px">
+                <h6>Order id:#{{order.order_number}}</h6>
+                <br>
+                Name: &nbsp{{ order_items.product.product.product_name}}
+                <br>
+                Shape: &nbsp{{ order_items.product.product_size}}
+                <br>  
+                Category: &nbsp{{ order_items.product.product.category.category_name}}
+                <br>  
+                Description: &nbsp{{ order_items.product.product.description }}
+                <br>
+                Qty: &nbsp{{ order_items.quantity }}
+                <br>
+                Price: &nbsp{{ order_items.product_price }}
+                <br>
+                Payment Method: &nbsp{{ payment.payment_method }}
+
+              </div>
+
+              <div
+                class="col-md-2 text-center d-flex flex-column justify-content-center align-items-center"
+              >
+                {% comment %} {% if product.order_status == 'Delivered' %}
+                <form
+                  method="post"
+                  action="{% url 'cancel_items' order_items.id%}"
+                >
+                  {% csrf_token %}
+                  <input
+                    type="hidden"
+                    name="order_id"
+                    value="{{ product.id }}"
+                  />
+                  <p class="text-muted mb-0 small">
+                    Payment status: {{ product.order_status }}
+                  </p>
+                  <button type="submit" class="btn-info">Cancel</button>
+                </form> {% endcomment %}
+
+                {% if product.order_status == 'Cancelled' %}
+
+                <p class="text-muted mb-0 small">
+                  Payment status: {{ product.order_status }}
+                </p>
+
+                {% else %}
+                <form
+                  method="post"
+                  action="{% url 'cancel_items' order_items.id %}"
+                >
+                  {% csrf_token %}
+                  <input
+                    type="hidden"
+                    name="order_id"
+                    value="{{ product.id }}"
+                  />
+                  <p class="text-muted mb-0 small">
+                    Payment status: {{ product.order_status }}
+                  </p>
+                  <button type="submit" class="btn-danger">Cancel</button>
+                </form>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row d-flex align-items-center">
+              <div class="col-md-2"></div>
+              <div class="col-md-10"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+    <div class="col-md-3 mt-2 mb-10 ml-5">
+      <div class="row">
+        <div class="card d-flex ml-auto pb-19 align-self-start" style="padding-right: 0px; width:350px;">
+        &nbsp&nbsp<h4> &nbsp&nbspShipping Address:</h4>
+          
+          <div class="container pt-5" style="padding-left:40px">
+            <ul>
+              <li><strong>Name:</strong> {{order.address.first_name}}{{order.address.last_name}}</li>
+              {% comment %} <li><strong>Address:</strong> {{order.address.address}}</li> {% endcomment %}
+              <li><strong>Phone:</strong> {{order.address.phone_number}}</li>
+              <li><strong>House:</strong> {{order.address.address}}</li>
+              <li><strong>Street:</strong> {{order.address.street}}</li>
+              <li><strong>City:</strong> {{order.address.city}}</li>
+              <li><strong>State:</strong> {{order.address.state}}</li>
+              <li><strong>Country:</strong> {{order.address.country}}</li>
+              <li><strong>Pin code:</strong> {{order.address.pin_code}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<style>
+  .card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+  }
+
+  /* On mouse-over, add a deeper shadow */
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  /* Add some padding inside the card container */
+  .container {
+    padding: 2px 16px;
+  }
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    border-radius: 5px; /* 5px rounded corners */
+  }
+
+  /* Add rounded corners to the top left and the top right corner of the image */
+  img {
+    border-radius: 5px 5px 0 0;
+  }
+</style>
+
+
+{% endblock content %}
