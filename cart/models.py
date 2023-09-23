@@ -56,7 +56,7 @@ class CartItems(models.Model):
         
 class Wishlist(models.Model):
     user=models.ForeignKey("account.CustomUser",  on_delete=models.CASCADE)
-    product=models.ForeignKey("store.ProductSize", on_delete=models.CASCADE)
+    product=models.ForeignKey("store.Product", on_delete=models.CASCADE)
 
 
 

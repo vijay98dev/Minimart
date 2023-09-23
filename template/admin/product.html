@@ -23,7 +23,7 @@
         <tbody>
             {% for product in products %}
           <tr>
-            <td>{{product.id}}</td> 
+            <td>{{forloop.counter}}</td> 
             <td>{{product.product_name}}</td> 
             <td>{{product.category.category_name}}</td>
             <td><a href="{% url 'variants' product.id %}"><button type="button" class="btn btn-secondary btn-sm">Show Variants</button></a></td>

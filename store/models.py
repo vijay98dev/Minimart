@@ -10,10 +10,15 @@ class Product(models.Model):
     product_name=models.CharField(max_length=50,unique=True)        
     description=models.TextField(max_length=400,blank=True)
     category=models.ForeignKey(Category,on_delete=models.CASCADE)
-
+    is_available=models.BooleanField(default=True)
+    slug=models.SlugField(max_length=100,unique=True)
     def __str__(self) -> str:
         return self.product_name
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.product_name}")
+        return super().save(*args, **kwargs)
 
 class ProductSize(models.Model):
     product_size=models.FloatField(max_length=5,blank=False)
@@ -21,8 +26,8 @@ class ProductSize(models.Model):
     stock=models.IntegerField()
     is_available=models.BooleanField(default=True)
     is_delete=models.BooleanField(default=False)
+    created_date=models.DateTimeField( auto_now_add=True)
     modified_date=models.DateTimeField(auto_now=True)
-    slug=models.SlugField(max_length=100,unique=True)
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
 
     def __str__(self) -> str:
@@ -33,8 +38,6 @@ class ProductSize(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(f"{self.product.product_name} {self.product_size}")
         if self.offer_price is None:
             self.offer_price()
         return super().save(*args, **kwargs)
@@ -63,7 +66,7 @@ class ProductImage(models.Model):
         return self.product_image
     
     def get_url(self):
-        return reverse("product_details", args=[self.product.category.slug,self.product_size.slug])
+        return reverse("product_details", args=[self.product.category.slug,self.product.slug])
     
 
 

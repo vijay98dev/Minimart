@@ -14,7 +14,7 @@
     <article class="gallery-wrap"> 
         <div class="img-big-wrap">
             <div class="magnify"> 
-           <a href="#"><img src="{{single_product.product_image.url}}"></a>
+           <a href="#"><img src="{{image.product_image.url}}"></a>
             </div>
         </div> <!-- img-big-wrap.// -->
         
@@ -22,16 +22,16 @@
             </aside>
             <main class="col-md-6 border-left">
 
-    <form action="{% url 'add_cart' single_product.product_size.id %}" method="post">
+    <form action="{% url "add_cart" %}" method="post">
 {% csrf_token %}
 
       <article class="content-body">
       
-      <h2 class="title">{{single_product.product.product_name}}</h2>
+      <h2 class="title">{{single_product.product_name}}</h2>
       <div class="mb-3"> 
-          <var class="price h4">₹<span id="displayedPrice">{{single_product.product_size.price}}</span></var> 
+          <var class="price h4">₹<span id="displayedPrice">{{product.price}}</span></var> 
       </div> 
-      <p>{{single_product.product.description}}</p>
+      <p>{{single_product.description}}</p>
       
       
       <hr>
@@ -46,6 +46,7 @@
                     {% for d in size  %}
                     <option value="{{ d.id }}" data-price="{{ d.product_size.price }}" > {{ d.product_size }}</option>
                     {% endfor %}
+
                 </select>
               </div>
           </div> <!-- row.// -->
@@ -56,10 +57,10 @@
             {% else %} 
                 <button type="submit" class="btn btn-sm  btn-primary"> <span class="text">Add to Cart</span> <i class="fas fa-shopping-cart"></i>  </button>
                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                    {% if single_product.product_size.id.in__wishlist %}
-                        <a href="{% url 'remove-wishlist' single_product.product_size.id %}" class="btn btn-sm btn-danger">Remove form wishlist</a>
+                    {% if in_whishlist %}
+                        <a href="{% url "remove-wishlist" single_product.id %}" class="btn btn-sm btn-danger">Remove form wishlist</a>
                     {% else %}
-                        <a href="{% url 'add-wishlist' single_product.product_size.id %}" class="btn btn-sm btn-primary">Add to wishlist</a>
+                        <a href="{% url "add-wishlist" single_product.id %}" class="btn btn-sm btn-primary">Add to wishlist</a>
                     {% endif %}
             {% endif %}
       </article> <!-- product-info-aside .// -->

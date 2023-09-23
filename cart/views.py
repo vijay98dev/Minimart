@@ -85,23 +85,26 @@ def _cart_id(request):
         cart=request.session.create()
     return cart
 
-def add_cart(request,product_id):
-    product=ProductSize.objects.get(id=product_id)
+def add_cart(request):
+    # product=ProductSize.objects.get(id=product_id)
     size=None
     variable=None
     if request.method=='POST':
         size=request.POST.get('size')
         print(size)
         variable=ProductSize.objects.get(id=size)
+        print(variable)
+    product=variable.product
+    print(product)
          
     try:
         cart=Cart.objects.get(cart_id=_cart_id(request))
     except Cart.DoesNotExist:
         cart=Cart.objects.create(cart_id=_cart_id(request),user=request.user)
     cart.save()
-    cart_item=CartItems.objects.filter(product=product,cart=cart).exists()
+    cart_item=CartItems.objects.filter(product=variable,cart=cart).exists()
     if cart_item:
-        cart_item=CartItems.objects.get(product=product,cart=cart)
+        cart_item=CartItems.objects.get(product=variable,cart=cart)
         print(cart_item)
         # exis_list=[]
         # id=[]
@@ -114,10 +117,10 @@ def add_cart(request,product_id):
         #     index=exis_list.index(size)
         #     item_id=id[index]
         #     cart_item=CartItems.objects.get(product=product,id=item_id)
-        if cart_item.quantity<product.stock:
+        if cart_item.quantity<variable.stock:
             cart_item.quantity += 1
         else:
-            cart_item.quantity=product.stock
+            cart_item.quantity=variable.stock
             messages.error(request,'Product has reached its maximum stock')
         cart_item.save()
         # else:
@@ -127,7 +130,27 @@ def add_cart(request,product_id):
         cart_item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
         cart_item.save()
     return redirect('cart')
-
+def add_cart_items(request,product_id):
+    variable=ProductSize.objects.get(id=product_id)
+    try:
+        cart=Cart.objects.get(cart_id=_cart_id(request))
+    except Cart.DoesNotExist:
+        cart=Cart.objects.create(cart_id=_cart_id(request),user=request.user)
+    cart.save()
+    cart_item=CartItems.objects.filter(product=variable,cart=cart).exists()
+    if cart_item:
+        cart_item=CartItems.objects.get(product=variable,cart=cart)
+        print(cart_item)
+        if cart_item.quantity<variable.stock:
+            cart_item.quantity += 1
+        else:
+            cart_item.quantity=variable.stock
+            messages.error(request,'Product has reached its maximum stock')
+        cart_item.save()
+    else:
+        cart_item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
+        cart_item.save()
+    return redirect('cart')
     # product=get_object_or_404(ProductSize, id=product_id)
     # cart=Cart.objects.get_or_create(user=request.user)
     # cart_item=CartItems.objects.get_or_create(cart=cart,product=product)
@@ -159,24 +182,24 @@ def remove_cart_items(request,product_id):
 
 def wishlist(request):
     wishlist=Wishlist.objects.filter(user=request.user)
-    products=ProductSize.objects.filter(id__in=wishlist.values('product'))
-    product_image=[]
-    for product in products:
-        product_images=ProductImage.objects.filter(product_size=product).first()
-        if product_images:
-            product_image.append(product_images)
-    
+    products=Product.objects.filter(id__in=wishlist.values('product'))
+    print(products)
+    product_images = ProductImage.objects.filter(product__in=products).first()
+    variant=ProductSize.objects.filter(product__in=products).first()
+    print(variant)
     
     context={
-        'wishlist':wishlist,
-        'product_image':product_image,
+        'wishlist':wishlist,  
+        'variant':variant,  
+        'product_image':product_images,
     }
     return render(request,'user/wishlist.html',context)
 
+@login_required
 
 def add_wishlist(request,id):
     user=request.user
-    product=get_object_or_404(ProductSize,id=id)
+    product=get_object_or_404(Product,id=id)
     wishlist=Wishlist.objects.filter(user=user)
     if not wishlist.filter(user=user,product=product).exists():
         Wishlist.objects.create(user=user,product=product)
@@ -185,10 +208,12 @@ def add_wishlist(request,id):
 
     return redirect('product_details',category_slug=product.product.category.slug,product_slug=product.slug)
 
+
+@login_required
 def remove_wishlist(request,id):
     user=request.user
-    product=get_object_or_404(ProductSize,id=id)
-    wishlist=Wishlist.objects.filter(user=user,product=product)
+    product=get_object_or_404(Product,id=id)
+    wishlist=Wishlist.objects.get(user=user,product=product)
     wishlist.delete()
     messages.info(request,'Product removed from wishlist')
     return redirect ('wishlist')

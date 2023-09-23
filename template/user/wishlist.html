@@ -27,9 +27,9 @@
                 
                 {% for wishlist in wishlist %}
               <tr>
-                <td><a href="{% url 'product_details' wishlist.product.product.category.slug wishlist.product.slug %}"><img src="{{ product_image.product_image.url }}" alt="" class="product-image" style="width:70px"></a></td> 
-                <td><a href="{% url 'product_details' wishlist.product.product.category.slug wishlist.product.slug %}">{{wishlist.product.product.product_name}}</a></td> 
-                <td>{{wishlist.product.price}}</td> 
+                <td><a href="{{product_image.get_url}}"><img src="{{ product_image.product_image.url }}" alt="" class="product-image" style="width:70px"></a></td> 
+                <td><a href="{{product_image.get_url}}">{{wishlist.product.product_name}}</a></td> 
+                <td>{{variant.price}}</td> 
                 <td><a href="{% url 'remove-wishlist' wishlist.product.id %}" class="btn btn-danger btn-sm">Remove </a></td>
               </tr>
               {% endfor %}
