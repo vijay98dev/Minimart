@@ -87,24 +87,44 @@ def _cart_id(request):
 
 def add_cart(request,product_id):
     product=ProductSize.objects.get(id=product_id)
+    size=None
+    variable=None
     if request.method=='POST':
         size=request.POST.get('size')
+        print(size)
+        variable=ProductSize.objects.get(id=size)
          
     try:
         cart=Cart.objects.get(cart_id=_cart_id(request))
     except Cart.DoesNotExist:
         cart=Cart.objects.create(cart_id=_cart_id(request),user=request.user)
     cart.save()
-    try:
+    cart_item=CartItems.objects.filter(product=product,cart=cart).exists()
+    if cart_item:
         cart_item=CartItems.objects.get(product=product,cart=cart)
+        print(cart_item)
+        # exis_list=[]
+        # id=[]
+        # for item in cart_item:
+        #     existing_variable=item.product
+        #     exis_list.append(existing_variable)
+        #     id.append(item.id)
+        # print(exis_list)
+        # if size ==exis_list:
+        #     index=exis_list.index(size)
+        #     item_id=id[index]
+        #     cart_item=CartItems.objects.get(product=product,id=item_id)
         if cart_item.quantity<product.stock:
             cart_item.quantity += 1
         else:
             cart_item.quantity=product.stock
             messages.error(request,'Product has reached its maximum stock')
         cart_item.save()
-    except CartItems.DoesNotExist:
-        cart_item=CartItems.objects.create(product=product,quantity=1,cart=cart)
+        # else:
+        #     item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
+        #     item.save()
+    else:
+        cart_item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
         cart_item.save()
     return redirect('cart')
 

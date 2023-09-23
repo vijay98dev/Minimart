@@ -12,54 +12,11 @@
         <div class="row no-gutters">
             <aside class="col-md-6">
     <article class="gallery-wrap"> 
-        <div class="row isotope-grid">
-					
-            {% for p in products  %}
-            <a href="{% url 'singproduct' p.productsize.first.id%}">
-            <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
-                <!-- Block2 -->
-                <div class="block2"> 
-                    <div class="block2-pic hov-img0">
-                        <img src="{{ p.images.first.image.url}}" alt="IMG-PRODUCT">
-
-                        {% comment %} <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-                            Quick View
-                        </a> {% endcomment %}
-                    </div>
-
-                    <div class="block2-txt flex-w flex-t p-t-14">
-                        <div class="block2-txt-child1 flex-col-l ">
-                            <h5>{{p.name}}</h5>
-                    
-                        
-                            <span class="stext-105 cl3">
-                                ${{p.productsize.first.price}}
-                            </span>
-                            <span class="stext-105 cl3">
-                                 {{p.subcategory.name}}
-                            </span>
-                            <span class="stext-105 cl3">
-                                color:{{p.color}}
-                            </span>
-                        </div>
-                        <div class="block2-txt-child2 flex-r p-t-3">
-                            <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-                                <img class="icon-heart1 dis-block trans-04" src="{% static 'static_user/images/icons/icon-heart-01.png' %}" alt="ICON">
-                                <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'static_user/images/icons/icon-heart-02.png' %}" alt="ICON">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-            {% endfor %}
-    
-        </div>
-        {% comment %} <div class="img-big-wrap">
+        <div class="img-big-wrap">
             <div class="magnify"> 
            <a href="#"><img src="{{single_product.product_image.url}}"></a>
             </div>
-        </div> <!-- img-big-wrap.// --> {% endcomment %}
+        </div> <!-- img-big-wrap.// -->
         
     </article> <!-- gallery-wrap .end// -->
             </aside>

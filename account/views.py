@@ -25,7 +25,7 @@ def register(request):
             user.phone_number=phone_number
             user.save()
             messages.success(request,'Registration Sucessful')
-            return redirect('register')
+            return redirect('signin')
     else:
         form=RegistrationForm()
     context={
