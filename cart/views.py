@@ -44,26 +44,6 @@ def cart(request,total=0,quantity=0,cart_items=None):
                 discount=cart_item.discount_amount()
         
             grand_total=cart_item.total_after_discount()
-        # if request.method=="POST":
-        #     coupon=request.POST.get('coupon')
-        #     coupon_obj=Coupons.objects.filter(coupon_code=coupon)
-        #     if not coupon_obj.exists():
-        #         messages.warning(request,'Please select a valid coupon code')
-        #         return redirect('cart')
-        #     if cart.coupon:
-        #         messages.warning(request,'This coupon has already used')
-        #         return redirect('cart')
-        #     if grand_total<coupon_obj.minimum_amount:
-        #         messages.warning(request,"Coupon doesn't satisfy the it's discrition")
-        #         return redirect('cart')
-        #     if coupon_obj.is_expired == True:
-        #         messages.warning(request,'The coupon you have selected has been expired')
-        #         return redirect('cart')
-        #     if UserCoupons.objects.filter(user=request.user)==coupon_obj:
-        #         messages.warning(request,'This coupon has already used')
-        #         return redirect('cart')
-        #     cart.coupon=coupon_obj
-        #     cart.save()
             
 
     except ObjectDoesNotExist:
@@ -106,26 +86,12 @@ def add_cart(request):
     if cart_item:
         cart_item=CartItems.objects.get(product=variable,cart=cart)
         print(cart_item)
-        # exis_list=[]
-        # id=[]
-        # for item in cart_item:
-        #     existing_variable=item.product
-        #     exis_list.append(existing_variable)
-        #     id.append(item.id)
-        # print(exis_list)
-        # if size ==exis_list:
-        #     index=exis_list.index(size)
-        #     item_id=id[index]
-        #     cart_item=CartItems.objects.get(product=product,id=item_id)
         if cart_item.quantity<variable.stock:
             cart_item.quantity += 1
         else:
             cart_item.quantity=variable.stock
             messages.error(request,'Product has reached its maximum stock')
         cart_item.save()
-        # else:
-        #     item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
-        #     item.save()
     else:
         cart_item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
         cart_item.save()
@@ -151,13 +117,6 @@ def add_cart_items(request,product_id):
         cart_item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
         cart_item.save()
     return redirect('cart')
-    # product=get_object_or_404(ProductSize, id=product_id)
-    # cart=Cart.objects.get_or_create(user=request.user)
-    # cart_item=CartItems.objects.get_or_create(cart=cart,product=product)
-    # cart_item.quantity+=1
-    # cart_item.save()
-    # cart=CartItems.objects.all()
-    # return redirect('cart')
 
 
 def remove_cart(request,product_id):

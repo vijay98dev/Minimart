@@ -10,16 +10,24 @@ from cart.views import _cart_id
 def store(request,category_slug=None):
     categories=Category.objects.all()
     products=None
+    # variant=None
+    # image=None
     product_counts=Product.objects.all().count()
     if category_slug is not None:
         category=get_object_or_404(Category,slug=category_slug)
-        products=ProductImage.objects.all().filter(product__category__slug=category_slug,product__is_available=True)
+        products=Product.objects.all().filter(category__slug=category_slug,is_available=True)
+        # variant=ProductSize.objects.filter(product__in=products)
+        # image=ProductImage.objects.filter(product__in=products)
     else:
-        products=ProductImage.objects.filter(product_size__is_available=True) 
+        products=Product.objects.filter(is_available=True) 
+        # variant=ProductSize.objects.filter(product__in=products)
+        # image=ProductImage.objects.filter(product__in=products)
     context={
         'product':products,
         'product_counts':product_counts,
-        'categories':categories
+        'categories':categories,
+        # 'variant':variant,
+        # 'image':image,
     }
     return render(request,'user/store.html',context)
 
@@ -46,12 +54,21 @@ def product_details(request,category_slug,product_slug):
 
 
 def search(request):
+
     if 'keyword' in request.GET:
         keyword=request.GET['keyword']
         if keyword:
             product=ProductImage.objects.filter(Q(product__product_name__icontains=keyword) | Q(product__description__icontains=keyword) | Q(product__category__category_name__icontains=keyword) | Q(product_size__price__icontains=keyword))
+            
+        products=Product.objects.filter(id__in=product.values('product'))
+        product_count=products.count()
+        print(products)
+        # category=Category.objects.get(id__in=products)
+        # image=ProductImage.objects.filter(product__in=products)
         context={
-            'products':product
+            'products':products, 
+            'product_counts':product_count, 
+            # 'categories':category, 
         }
     return render(request,'user/search.html',context)
 

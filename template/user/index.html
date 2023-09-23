@@ -32,15 +32,16 @@
       {% for product in products %}
       <div class="col-md-3">
         <div class="card card-product-grid h-100">
-          <a href="{{product.get_url}}" class="img-wrap">
-            <img src="{{product.product_image.url}}" />
+          <a href="{{product.productimage_set.first.get_url}}" class="img-wrap">
+            <img src="{{product.productimage_set.first.product_image.url}}" />
           </a>
           <figcaption class="info-wrap">
-            <a href="{{product.get_url}}" class="title"
-              >{{product.product.product_name}}</a
+            <a href="{{product.productimage_set.first.get_url}}" class="title"
+              >{{product.product_name}}</a
             >
-            <div class="price mt-1">₹{{product.product_size.price}}</div>
+            <div class="price mt-1">₹{{product.productsize_set.first.price}}</div>
             <!-- price-wrap.// -->
+            <a href="{{product.productimage_set.first.get_url}}" class="btn btn-block btn-bg-primary">View Details</a>
           </figcaption>
         </div>
       </div>

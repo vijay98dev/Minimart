@@ -6,7 +6,9 @@ from django.utils import timezone
 
 # Create your views here.
 def index(request):
-    product=ProductImage.objects.all()
+    product=Product.objects.all().filter(is_available=True)
+    variant=ProductSize.objects.filter(product__in=product).first()
+    image=ProductImage.objects.filter(product__in=product).first()
     # try:
     #     offers=CategoryOffer.objects.filter(valid_to=timezone.now())
     #     offer_products=[]
@@ -20,6 +22,8 @@ def index(request):
 
     context={
         'products':product,
+        'variant':variant,
+        'image':image,
         # 'offers':offers,
         # 'offer_products':offer_products,
     }
@@ -29,11 +33,8 @@ def index(request):
 def invoice(request,id):
     user=request.user
     order=Order.objects.get(pk=id)
-    print(order)
     order_items=OrderProduct.objects.filter(order=order)
-    print(order_items)
     payment=Payment.objects.get(order=order)
-    print(payment.id)
     context={
         'order':order,
         'order_items':order_items, 
