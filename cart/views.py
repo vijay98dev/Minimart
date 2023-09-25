@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+
 def cart(request,total=0,quantity=0,cart_items=None):
     user=request.user
     try:
@@ -65,6 +66,8 @@ def _cart_id(request):
         cart=request.session.create()
     return cart
 
+
+@login_required
 def add_cart(request):
     # product=ProductSize.objects.get(id=product_id)
     size=None
@@ -96,6 +99,8 @@ def add_cart(request):
         cart_item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
         cart_item.save()
     return redirect('cart')
+
+@login_required
 def add_cart_items(request,product_id):
     variable=ProductSize.objects.get(id=product_id)
     try:
@@ -118,7 +123,7 @@ def add_cart_items(request,product_id):
         cart_item.save()
     return redirect('cart')
 
-
+@login_required
 def remove_cart(request,product_id):
     cart=Cart.objects.get(cart_id=_cart_id(request))
     product=get_object_or_404(ProductSize,id=product_id)
@@ -130,6 +135,7 @@ def remove_cart(request,product_id):
         cart_item.delete()
     return redirect('cart')
 
+@login_required
 def remove_cart_items(request,product_id):
     cart=Cart.objects.get(cart_id=_cart_id(request))
     product=get_object_or_404(ProductSize,id=product_id)

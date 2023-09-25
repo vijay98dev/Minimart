@@ -9,7 +9,7 @@ import os
 from django.contrib import messages
 import datetime
 from dotenv import load_dotenv
-
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -25,7 +25,7 @@ from dotenv import load_dotenv
 
 
 
-
+@login_required
 def checkout(request,total=0,quantity=0):
     user=request.user
 
@@ -82,6 +82,8 @@ def confirmation(request):
     }
     return render (request,'user/confirmation.html',context)
 
+
+@login_required
 def create_order(request,total=0):
     user=request.user
     address_id=None
@@ -178,7 +180,7 @@ def confirmation_cod(request,id):
     }
     return render(request,'user/confirmation-cod.html',context)
 
-
+@login_required
 def my_order(request):
     user=request.user
     order=Order.objects.filter(user=user).order_by('-created_at')
@@ -195,7 +197,7 @@ def my_order(request):
         'image':image,
     }
     return render(request,'user/my-order.html',context)
-
+@login_required
 def order_details(request,id):
     order=Order.objects.get(pk=id)
     try:
@@ -211,7 +213,7 @@ def order_details(request,id):
         'payment':payment, 
     }
     return render(request,'user/order-details.html',context)
-
+@login_required
 def cancel_order(request,id):
     if request.method=='POST':
         order=Order.objects.get(pk=id)
@@ -225,7 +227,7 @@ def cancel_order(request,id):
                 product.save()
             messages.info(request,'You have cancelled an order')
     return redirect('my-order')
-
+@login_required
 def cancel_items(request,id):
     if request.method == 'POST':
         order_item = OrderProduct.objects.get(pk=id)
