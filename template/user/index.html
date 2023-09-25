@@ -29,19 +29,19 @@
     <!-- sect-heading -->
 
     <div class="row">
-      {% for product in products %}
+      {% for items in product %}
       <div class="col-md-3">
         <div class="card card-product-grid h-100">
-          <a href="{{product.productimage_set.first.get_url}}" class="img-wrap">
-            <img src="{{product.productimage_set.first.product_image.url}}" />
+          <a href="{{items.productimage_set.first.get_url}}" class="img-wrap">
+            <img src="{{items.productimage_set.first.product_image.url}}" />
           </a>
           <figcaption class="info-wrap">
-            <a href="{{product.productimage_set.first.get_url}}" class="title"
-              >{{product.product_name}}</a
+            <a href="{{items.productimage_set.first.get_url}}" class="title"
+              >{{items.product_name}}</a
             >
-            <div class="price mt-1">₹{{product.productsize_set.first.price}}</div>
+            <div class="price mt-1">₹{{items.productsize_set.first.price}}</div>
             <!-- price-wrap.// -->
-            <a href="{{product.productimage_set.first.get_url}}" class="btn btn-block btn-bg-primary">View Details</a>
+            <a href="{{items.productimage_set.first.get_url}}" class="btn btn-block btn-bg-primary">View Details</a>
           </figcaption>
         </div>
       </div>
@@ -53,43 +53,32 @@
   <!-- container // -->
 </section>
 <!-- ========================= SECTION  END// ========================= -->
-{% if offers %}
+{% if in_offer %}
 <section class="section-name padding-y-sm">
   <div class="container">
     <header class="section-heading">
-      <a href="" class="btn btn-outline-primary float-right">See all</a>
+      {% comment %} <a href="" class="btn btn-outline-primary float-right">See all</a> {% endcomment %}
       <h3 class="section-title">Offer products</h3>
     </header>
     <!-- sect-heading -->
 
     <div class="row">
-      {% for offer in offers %}
+      {% for product in offer_product %}
       <div class="col-md-3">
-        {% for product in offer.product.all %}
         <div class="card card-product-grid h-100">
-          <a href="{{ product.get_url }}" class="img-wrap">
-            <img src="{{ product.product_image.url }}" />
+          <a href="{{product.productimage_set.first.get_url}}" class="img-wrap">
+            <img src="{{product.productimage_set.first.product_image.url}}" />
           </a>
-          {% if product.product_size.offer_price != 0 %}
           <figcaption class="info-wrap">
-            <a href="{{product.get_url}}" class="title"
-              >{{product.product.product_name}}</a
+            <a href="{{product.productimage_set.first.get_url}}" class="title"
+              >{{product.product_name}}</a
             >
-            <div class="price mt-1">₹{{product.product_size.price}}</div>
-            <div class="price mt-1">₹{{product.product_size.offer_price}}</div>
+            <div class="price mt-1">₹{{product.productsize_set.first.offer_price}}</div>
+            <del class="price-old">₹{{product.productsize_set.first.price}}</del>
             <!-- price-wrap.// -->
+            <a href="{{product.productimage_set.first.get_url}}" class="btn btn-block btn-bg-primary">View Details</a>
           </figcaption>
-          {% else %}
-          <figcaption class="info-wrap">
-            <a href="{{product.get_url}}" class="title"
-              >{{product.product.product_name}}</a
-            >
-            <div class="price mt-1">₹{{product.product_size.price}}</div>
-            <!-- price-wrap.// -->
-          </figcaption>
-          {% endif %}
         </div>
-        {% endfor %}
       </div>
       <!-- col.// -->
       {% endfor %}

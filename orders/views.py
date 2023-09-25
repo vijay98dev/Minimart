@@ -67,14 +67,16 @@ def confirmation(request):
     payment=Payment.objects.get(razor_pay_order_id=order_id)
     payment.razor_pay_payment_id=payment_id
     payment.razor_pay_payment_signature=signature
+    payment.status='Completed'
     payment.save()
     order=Order.objects.get(id=payment.order_id)
     order.is_paid=True
     order.save()
     confirmed_payment=Payment.objects.get(razor_pay_order_id=order_id)
-    order_items=OrderProduct.objects.filter(order_id=order.id)
+    order_items=OrderProduct.objects.filter(order=payment.order_id)
     for items in order_items:
-        items.payment_id=confirmed_payment.id
+        items.payment=confirmed_payment
+        items.save()
     context={
         'order':order
     }

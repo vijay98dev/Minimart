@@ -1,31 +1,40 @@
 from django.shortcuts import render
 from store.models import Product,ProductImage,ProductSize
+from category.models import CategoryOffer,Category
 from orders.models import Order,Payment,OrderProduct
 from django.utils import timezone
-
+from django.db.models import Q
 
 # Create your views here.
 def index(request):
-    product=Product.objects.all().filter(is_available=True)
-    variant=ProductSize.objects.filter(product__in=product).first()
-    image=ProductImage.objects.filter(product__in=product).first()
-    # try:
-    #     offers=CategoryOffer.objects.filter(valid_to=timezone.now())
-    #     offer_products=[]
-    #     for offer in offers:
-    #         products=offer.product.all()
-    #         print(products,'111')
-    #         offer_products.append({'offer':offer,'products':products})
-    #     print(offer_products)
-    # except CategoryOffer.DoesNotExist:
-    #     pass
+    product=Product.objects.all().filter(Q(is_available=True) &Q(offer_applied=False))
+    print(product)
+    try:
+        offers=CategoryOffer.objects.all().filter(is_active=True)
+        print(offers)
+        # Loop through all the offers present
+        for offer in offers:
+            category_offer=offer.category
+            offer_discount=offer.discount_percentage
+            # products that falls under the offer
+            offer_products=Product.objects.filter(category=category_offer)
+            print(offer_products)
+            for products in offer_products:
+                products.offer_applied=True
+                products.save()
+                variant=ProductSize.objects.filter(product=products)
+                print(variant)
+                for items in variant:
+                    items.offer_price = items.price - (items.price * offer_discount / 100)
+                    items.save()
+        in_offer=CategoryOffer.objects.filter(is_active=True).exists()
+    except CategoryOffer.DoesNotExist:
+        pass
 
     context={
-        'products':product,
-        'variant':variant,
-        'image':image,
-        # 'offers':offers,
-        # 'offer_products':offer_products,
+        'product':product,
+        'offer_product':offer_products,
+        'in_offer':in_offer,
     }
     return render(request,'user/index.html',context)
 

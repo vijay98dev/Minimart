@@ -36,8 +36,7 @@ class CategoryOffer(models.Model):
     offer_name = models.CharField(max_length=100)
     valid_to = models.DateField()
     category = models.ForeignKey("category.Category", on_delete=models.CASCADE)
-    discount_percentage = models.IntegerField()
-    product = models.ForeignKey("store.Product", on_delete=models.CASCADE)   
+    discount_percentage = models.IntegerField()  
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -50,11 +49,7 @@ class CategoryOffer(models.Model):
             return self.is_active
         else:
             return self.is_active
+        
 
-    # def offer_amount(self):
-    #     percentage=self.discount_percentage
-    #     product_price=self.product.price
-    #     offer_price=product_price-((product_price*percentage)/100)
-    #     return offer_price  
 
 

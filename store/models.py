@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from django.db import models
 from category.models import Category
 from django.urls import reverse
@@ -11,6 +12,7 @@ class Product(models.Model):
     description=models.TextField(max_length=400,blank=True)
     category=models.ForeignKey(Category,on_delete=models.CASCADE)
     is_available=models.BooleanField(default=True)
+    offer_applied=models.BooleanField(default=False)
     slug=models.SlugField(max_length=100,unique=True)
     def __str__(self) -> str:
         return self.product_name
@@ -29,6 +31,7 @@ class ProductSize(models.Model):
     created_date=models.DateTimeField( auto_now_add=True)
     modified_date=models.DateTimeField(auto_now=True)
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
+    offer_price=models.IntegerField(default=0,null=True,blank=True)
 
     def __str__(self) -> str:
         return f'{self.product.product_name}'
@@ -37,22 +40,7 @@ class ProductSize(models.Model):
         self.is_delete=True
         self.save()
 
-    def save(self, *args, **kwargs):
-        if self.offer_price is None:
-            self.offer_price()
-        return super().save(*args, **kwargs)
-
-    def offer_price(self):
-        offer_percentage=0
-        if self.product.category.categoryoffer_set.filter(is_active=True,valid_to__gte=datetime.now()).exists():
-            category_offer=self.product.category.categoryoffer_set.first()
-            discount_percentage=category_offer.discount_percentage
-            if discount_percentage > 0:
-                #calculate the offer price based on the discount percentage
-                discount_price=(self.price*discount_percentage)/100
-                self.offer_price=self.price-discount_price
-                return self.offer_price
-            return None
+    
 
     def get_id(self):
         return reverse("edit-variant",args=[self.product.id,self.id])

@@ -22,7 +22,7 @@
         <tbody>
           {% for images in image %}
           <tr>
-            <td>{{images.id}}</td>
+            <td>{{forloop.counter}}</td>
             <td><img src="{{images.product_image.url}}" alt="" style='width:50px;height=50px'></td>
             <td><a href="{% url 'delete-images' images.id %}" class="btn btn-danger btn-sm">Delete</a></td>
           </tr>

@@ -29,8 +29,9 @@
       
       <h2 class="title">{{single_product.product_name}}</h2>
       <div class="mb-3"> 
-          <var class="price h4">₹<span id="displayedPrice">{{product.price}}</span></var> 
+          <var class="price h4">₹{{product.offer_price}}</var> 
       </div> 
+      <del class="price-old">₹{{product.price}}</del>
       <p>{{single_product.description}}</p>
       
       

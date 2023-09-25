@@ -24,7 +24,7 @@
         <tbody>
           {% for variant in variants %}
           <tr>
-            <td>{{variant.id}}</td>
+            <td>{{forloop.counter}}</td>
             <td>{{variant.price}}</td>
             <td>{{variant.stock}}</td>
             <td>{{variant.product_size}}</td>

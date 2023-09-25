@@ -17,7 +17,7 @@
               <th>Offer Name</th>
               <th>Category</th>    
               <th>Discount Percentage</th>    
-              <th>Products</th>    
+              {% comment %} <th>Products</th>     {% endcomment %}
               <th>Expires On</th>       
               <th>Action</th>     
 
@@ -30,7 +30,7 @@
             <td>{{offer.offer_name}}</td> 
             <td>{{offer.category}}</td>
             <td>{{offer.discount_percentage}}%</td>
-            <td>{{offer.product.product_name}}</td>
+            {% comment %} <td>{{offer.product.product_name}}</td> {% endcomment %}
             <td>{{offer.valid_to}}</td>
             <td><a href="" class="btn btn-danger btn-sm">Delete</button></a>/<a href="" class="btn btn-info btn-sm">Edit</button></a></td>
           </tr>

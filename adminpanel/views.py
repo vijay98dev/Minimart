@@ -192,7 +192,7 @@ def edit_category(request, id):
     return render(request, 'admin/edit-category.html', context)
 
 def product(request):
-    product=Product.objects.all()
+    product=Product.objects.all().order_by('id')
     context={
         'products':product
     }
@@ -251,7 +251,7 @@ def edit_product(request,id):
     return render(request,'admin/edit-product.html',context)
 
 def variant(request,id):
-    variant= ProductSize.objects.filter(product=id)
+    variant= ProductSize.objects.filter(product=id).order_by('id')
     product=get_object_or_404(Product,pk=id)
 
     context={
@@ -330,7 +330,7 @@ def delete_variant(request,id):
     return redirect('product')
 
 def product_image(request,id):
-    images=ProductImage.objects.filter(product_size=id)
+    images=ProductImage.objects.filter(product_size=id).order_by('id')
     product=ProductSize.objects.get(id=id)
     context={
         'image':images,
@@ -507,11 +507,11 @@ def add_offer(request):
         except Category.DoesNotExist:
             messages.error(request,'Invalid category selected')
             return redirect('add-offer')
-        product=Product.objects.get(category=cat)
+        # product=Product.objects.get(category=cat)
         if  CategoryOffer.objects.filter(Q(offer_name=offer_name) &Q(category=category)):
             messages.warning(request,'Offer already exist')
         else:
-            offer=CategoryOffer.objects.create(offer_name=offer_name,valid_to=expires_on,category=cat,discount_percentage=discount_percentage,product=product)
+            offer=CategoryOffer.objects.create(offer_name=offer_name,valid_to=expires_on,category=cat,discount_percentage=discount_percentage)
     context={
         'categories':categories
     }
