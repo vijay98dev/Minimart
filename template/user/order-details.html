@@ -70,7 +70,7 @@
                 {% if product.order_status == 'Cancelled' %}
 
                 <p class="text-muted mb-0 small">
-                  Payment status: {{ product.order_status }}
+                  Product has been cancelled
                 </p>
 
                 {% else %}
@@ -110,7 +110,7 @@
             <ul>
               <li><strong>Name:</strong> {{order.address.first_name}}{{order.address.last_name}}</li>
               {% comment %} <li><strong>Address:</strong> {{order.address.address}}</li> {% endcomment %}
-              <li><strong>Phone:</strong> {{order.address.phone_number}}</li>
+              <li><strong>Phone:</strong> {{user.phone_number}}</li>
               <li><strong>House:</strong> {{order.address.address}}</li>
               <li><strong>Street:</strong> {{order.address.street}}</li>
               <li><strong>City:</strong> {{order.address.city}}</li>

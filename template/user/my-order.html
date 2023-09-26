@@ -18,20 +18,20 @@
     <div class="card shadow-0 border mb-2">
       <div class="card-body" style="width: 800px;">
         <div class="row">
-            <div class="col-md-2">
+            {% comment %} <div class="col-md-2">
               <a href="{% url 'order_details' order.id%}">
                 <img
-                    src="{{image.product_image.product_image.url}}"
+                    src="{{image.product_image.url}}"
                     alt="Phone"
                     style="width:90px"/>
               </a>    
-            </div>
+            </div> {% endcomment %}
             
           <div
             class="col-md-2 text-center d-flex justify-content-center align-items-center"
           >
           <a href="{% url 'order-details' order.id %}">
-            <p class="text-muted mb-0">{{image.product.product.product_name}}</p>
+            <p class="text-muted mb-0">#{{order.order_number}}</p>
           </a>
           </div>
          
@@ -46,11 +46,13 @@
           >
             <p class="text-muted mb-0 small">{{order.order_total}}</p>
           </div>
-         
+          <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+          <p class="text-muted mb-0 small">{{order.status}}</p>
+        </div>
 
           <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-            {% if order_item.order_status == 'Delivered' %}
-            <p class="text-muted mb-0 small">{{ order_item.order_status }}</p>&nbsp&nbsp
+            {% if order.status == 'Delivered' %}
+            <p class="text-muted mb-0 small">Order Delivered</p>&nbsp&nbsp
             {% comment %} <form method="post" action="{% url 'cancel_order' order_item.id %}">
               {% csrf_token %}
               <input type="hidden" name="order_id" value="{{ order_item.id }}">
@@ -59,8 +61,9 @@
             {% elif order_item.order_status == 'Cancelled' %}
             <p class="text-muted mb-0 small">{{ order_item.order_status }}</p>&nbsp&nbsp
             {% endcomment %}
-            {% else %} 
-              <p class="text-muted mb-0 small">{{ order_item.order_status }}</p>&nbsp&nbsp
+            {% elif order.status == 'Cancelled'%} 
+              <p class="text-muted mb-0 small">Order Cancelled</p>&nbsp&nbsp
+            {% else %}
               <form method="post" action="{% url 'cancel_order' order.id %}">
                 {% csrf_token %}
                 <input type="hidden" name="order_id" value="{{ order_item.id }}">

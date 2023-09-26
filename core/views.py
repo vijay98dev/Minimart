@@ -43,6 +43,7 @@ def invoice(request,id):
     order_items=OrderProduct.objects.filter(order=order)
     payment=Payment.objects.get(order=order)
     context={
+        'user':user,
         'order':order,
         'order_items':order_items, 
         'payment':payment, 

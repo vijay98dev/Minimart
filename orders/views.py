@@ -129,7 +129,10 @@ def create_order(request,total=0):
             for items in CartItems.objects.all():
                 product=items.product
                 image=ProductImage.objects.get(product_size=product)
-                order_items=OrderProduct.objects.create(order=order,payment=payment,user=user,product=product,product_image=image,quantity=items.quantity,product_price=items.product.price,sub_total=items.sub_total(),tax=items.tax(),discount=items.discount_amount(),total=(items.sub_total()+items.tax()-items.discount_amount()))
+                if product.offer_price==0:
+                    order_items=OrderProduct.objects.create(order=order,payment=payment,user=user,product=product,product_image=image,quantity=items.quantity,product_price=items.product.price,sub_total=items.sub_total(),tax=items.tax(),discount=items.discount_amount(),total=(items.sub_total()+items.tax()-items.discount_amount()))
+                else:
+                    order_items=OrderProduct.objects.create(order=order,payment=payment,user=user,product=product,product_image=image,quantity=items.quantity,product_price=items.product.offer_price,sub_total=items.sub_total(),tax=items.tax(),discount=items.discount_amount(),total=(items.sub_total()+items.tax()-items.discount_amount()))
         # if 'payment_submit' in request.POST:
         #     print("else payment")
         #     payment_method=request.POST.get('pay-method')
@@ -184,21 +187,25 @@ def confirmation_cod(request,id):
 def my_order(request):
     user=request.user
     order=Order.objects.filter(user=user).order_by('-created_at')
-    order_items=OrderProduct.objects.filter(order__in=order).order_by('-created_at')
-    quantity=0
-    for i in order_items:
-        quantity+=i.quantity
-    image=OrderProduct.objects.filter(order__in=order).order_by('-created_at').first()
+    print(order)
+    for item in order:
+        quantity=0
+        order_items=OrderProduct.objects.filter(order=item).order_by('-created_at')
+        print(order_items)
+        for i in order_items:
+            quantity+=i.quantity
+            print(quantity)
+        
     context={
         'user':user,
         'order':order,
         'order_items':order_items,
         'quantity':quantity,
-        'image':image,
     }
     return render(request,'user/my-order.html',context)
 @login_required
 def order_details(request,id):
+    user=request.user
     order=Order.objects.get(pk=id)
     try:
         order_items=OrderProduct.objects.filter(order=id)
@@ -210,7 +217,8 @@ def order_details(request,id):
     context={
         'order_items':order_items,
         'order':order, 
-        'payment':payment, 
+        'payment':payment,  
+        'user':user,  
     }
     return render(request,'user/order-details.html',context)
 @login_required
