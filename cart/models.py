@@ -30,6 +30,8 @@ class CartItems(models.Model):
     
 
     def sub_total(self):
+        if self.product.product.offer_applied == True:
+            return self.product.offer_price * self.quantity
         return self.product.price * self.quantity
     
     def tax(self):

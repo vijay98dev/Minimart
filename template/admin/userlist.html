@@ -32,10 +32,14 @@
                 {% else %}
                 <span class="badge badge-danger rounded-pill d-inline text-black-50 text-danger">Blocked</span>
                 {% endif %}</td>
-                <td>{% if user.is_active %}
+                <td>{% if user.is_superuser %}
+                  User is supre user
+                  {% else %}
+                  {% if user.is_active %}
                   <a href="{% url 'blockuser' user.id  %}"><button type="button" class="btn btn-danger btn-sm">Block</button></a>
                   {% else %}
                   <a href="{% url 'unblockuser' user.id  %}"><button type="button" class="btn btn-info btn-sm">Unblock</button></a>
+                  {% endif %}
                   {% endif %}</td>
           </tr>
           {% endfor %}

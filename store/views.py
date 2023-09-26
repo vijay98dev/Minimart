@@ -14,12 +14,15 @@ def store(request,category_slug=None):
     if category_slug is not None:
         category=get_object_or_404(Category,slug=category_slug)
         products=Product.objects.all().filter(category__slug=category_slug,is_available=True)
+        in_offer=CategoryOffer.objects.filter(is_active=True).exists()
     else:
-        products=Product.objects.filter(is_available=True) 
+        products=Product.objects.filter(is_available=True)
+        in_offer=CategoryOffer.objects.filter(is_active=True).exists()
     context={
         'product':products,
         'product_counts':product_counts,
-        'categories':categories,
+        'categories':categories, 
+        'in_offer':in_offer, 
     }
     return render(request,'user/store.html',context)
 
@@ -30,8 +33,10 @@ def product_details(request,category_slug,product_slug):
         single_product_details=ProductSize.objects.filter(product=single_product).first()
         single_product_image=ProductImage.objects.filter(product=single_product).first()
         size=ProductSize.objects.filter(product=single_product).order_by('created_date')
+        in_offer=None
+        if single_product.offer_applied==True:
+            in_offer=True
         # in_cart=CartItems.objects.filter(cart__cart_id=_cart_id(request),product=size).exists()
-        in_offer=CategoryOffer.objects.filter(is_active=True).exists()
         in_whishlist=Wishlist.objects.filter(user=request.user,product=single_product).exists()
     except ProductImage.DoesNotExist:
         raise Http404("Product not found")
@@ -40,6 +45,7 @@ def product_details(request,category_slug,product_slug):
         'product':single_product_details,
         'image':single_product_image,
         'size':size,
+        'in_offer':in_offer,
         'in_whishlist':in_whishlist,
     }
     return render(request,'user/product_details.html', context)

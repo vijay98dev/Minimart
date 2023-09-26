@@ -21,6 +21,10 @@ class Product(models.Model):
         if not self.slug:
             self.slug = slugify(f"{self.product_name}")
         return super().save(*args, **kwargs)
+    
+    def soft_delete(self):
+        self.is_available=False
+        self.save()
 
 class ProductSize(models.Model):
     product_size=models.FloatField(max_length=5,blank=False)
@@ -38,6 +42,7 @@ class ProductSize(models.Model):
 
     def soft_delete(self):
         self.is_delete=True
+        self.is_available=False
         self.save()
 
     

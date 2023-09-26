@@ -28,10 +28,16 @@
       <article class="content-body">
       
       <h2 class="title">{{single_product.product_name}}</h2>
+      {% if in_offer %}
       <div class="mb-3"> 
           <var class="price h4">₹{{product.offer_price}}</var> 
       </div> 
       <del class="price-old">₹{{product.price}}</del>
+      {% else %}
+      <div class="mb-3"> 
+        <var class="price h4">₹{{product.price}}</var> 
+    </div> 
+      {% endif %}
       <p>{{single_product.description}}</p>
       
       

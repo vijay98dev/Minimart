@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render,redirect
+from django.urls import reverse
 from account.forms import RegistrationForm
 from account.models import CustomUser,UserProfile
 from account.helper import MessageHandler
@@ -36,86 +37,58 @@ def register(request):
 def signin(request):
     if request.method=='POST':
         email=request.POST.get('email')
-        # phone_number=request.POST.get('phone_number')
         password=request.POST.get('password')
         user=authenticate(email=email,password=password)
         if user is not None:
-            if user.is_authenticated:
-                login(request,user)
-                # user=CustomUser.objects.get(email=email)
-                return redirect('index')
-            else:
-                messages.info(request,'Something went wrong please login again')
-                return redirect ('signin')
-            # print(user)
-            # request.session['user_id']=user.id
-            # login(request,user)
+            login(request,user)
+            return redirect('index')
         else:
             messages.info(request,'Invalid Credentails')
             return redirect('signin')
-
-        # user.otp=random.randint(1000,9999)
-        # user.save()
-        # message_handler=MessageHandler(phone_number,user.otp).send_otp_on_phone()
-        # return redirect(f'otp-verify/{user.uid}')
     return render(request,'user/signin.html')
 
-def otp_verify(request,uid):
-    if request.method=='POST':
-        otp=request.POST.get('otp')
-        user_id=request.session.get('user_id')
-        user=CustomUser.objects.get(id=user_id)
-        if otp==user.otp:
-            
-            login(request,user)
-        user_details=CustomUser.objects.all()
-        return redirect('index')
-    context={
-        'uid':uid
-    }
-    return render(request,'user/otp-verify.html',context)
-
-
 def verify_number(request):
+    user=None
     if request.method=='POST':
         phone_number=request.POST.get('phone_number')
         if CustomUser.objects.filter(phone_number=phone_number).exists():
             user=CustomUser.objects.get(phone_number__exact=phone_number)
             user.otp=random.randint(1000,9999)
             user.save()
-            request.session['user_id']=user.id
             message_handler=MessageHandler(phone_number,user.otp).send_otp_on_phone()
-            messages.success(request,'Otp number for verification has been served')
-            return redirect('confirm_otp')
+            messages.success(request,'Otp number for verification has been sent')
+            return redirect(reverse('confirm_otp', args=[user.id]))
         else:
             messages.error(request,'Phone number is not in the database.Please enter a valid number')
-    return render(request,'user/verify_number.html')
 
-def confirm_otp(request):
+    return render(request,'user/verify_number.html',{'user':user})
+
+def confirm_otp(request,id):
+    user=CustomUser.objects.get(id=id)
     if request.method=='POST':
-        otp=request.POST.get('otp')
-        user_id=request.session.get('user_id')
-        user=CustomUser.objects.get(id=user_id)
+        otp=request.POST.get('otp-verify')
         print(otp)
-        print(user)
         if otp == user.otp:
-            login(request,user)
-        return redirect ('change_password')
+            return redirect (reverse('change_password', args=[user.id]))
 
-    return render(request,'user/confirm_otp.html')
+    return render(request,'user/confirm_otp.html',{'user':user})
 
-def change_password(request):
-    user_id=request.session.get('user_id')
-    user=CustomUser.objects.get(id=user_id)
+def change_password(request,id):
+    user=CustomUser.objects.get(id=id)
+    print(user)
     if request.method=='POST':
         new_password=request.POST.get('password')
         confirm_password=request.POST.get('confirm_password')
         if new_password==confirm_password:
-            user.password=new_password
+            user.set_password(new_password)
             user.save()
-        return redirect('signin')
-
-    return render(request,'user/change_password.html')
+            password=user.password
+            print(password)
+            return redirect('signin')
+        else:
+            messages.error(request,"Password doesn't match")
+            return redirect(reverse('change_password',args=[user.id]))
+    return render(request,'user/change_password.html',{'user':user})
 @login_required(login_url='signin')
 def signout(request):
     logout(request)

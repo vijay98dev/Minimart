@@ -114,7 +114,7 @@
     <div class="row">
         {% for products in product  %}
         <div class="col-md-4">
-            <figure class="card card-product-grid h-100">
+            <figure class="card card-product-grid h-70 ">
                 <div class="img-wrap"> 
                     
                    <a href="{{products.productimage_set.first.get_url}}"><img src="{{ products.productimage_set.first.product_image.url }}"></a>
@@ -122,22 +122,46 @@
                 </div> <!-- img-wrap.// -->
                 <figcaption class="info-wrap">
                     <div class="fix-height">
-                        <a href="{{product.productimage_set.first.get_url}}" class="title">{{products.product_name}}</a>
+                        <a href="{{products.productimage_set.first.get_url}}" class="title">{{products.product_name}}</a>
+                        
                         <div class="price-wrap mt-2">
                             <span class="price">₹{{ products.productsize_set.first.price }}</span>
-                           {% comment %} <del class="price-old">₹1980</del> {% endcomment %}
+                            
                         </div> <!-- price-wrap.// -->
                     </div>
-                    <a href="{{product.productimage_set.first.get_url}}" class="btn btn-block btn-bg-primary">View Details</a>
+                    <a href="{{products.productimage_set.first.get_url}}" class="btn btn-block btn-bg-primary">View Details</a>
                 </figcaption>
             </figure>
         </div> <!-- col.// -->
         {% endfor %}
       
     </div> <!-- row end.// -->
-    
-    
-    
+    {% comment %} {% if in_offer %}
+    <div class="row">
+        {% for products in product  %}
+        <div class="col-md-4">
+            <figure class="card card-product-grid h-70 ">
+                <div class="img-wrap"> 
+                    
+                   <a href="{{products.productimage_set.first.get_url}}"><img src="{{ products.productimage_set.first.product_image.url }}"></a>
+                    
+                </div> <!-- img-wrap.// -->
+                <figcaption class="info-wrap">
+                    <div class="fix-height">
+                        <a href="{{products.productimage_set.first.get_url}}" class="title">{{products.product_name}}</a>
+                        <div class="price-wrap mt-2">
+                            <span class="price">₹{{ products.productsize_set.first.offer_price}}</span>
+                           <del class="price-old">{{ products.productsize_set.first.price}}</del>
+                        </div> <!-- price-wrap.// -->
+                    </div>
+                    <a href="{{products.productimage_set.first.get_url}}" class="btn btn-block btn-bg-primary">View Details</a>
+                </figcaption>
+            </figure>
+        </div> <!-- col.// -->
+        {% endfor %}
+      
+    </div> <!-- row end.// -->
+    {% endif %} {% endcomment %}
     {% comment %} <nav class="mt-4" aria-label="Page navigation sample">
       <ul class="pagination">
         <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>

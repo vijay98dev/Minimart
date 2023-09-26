@@ -18,6 +18,7 @@ from django.db.models import Q
 
 
 # Create your views here.
+
 def admin_login(request):
     try:
         if request.user.is_authenticated:
@@ -104,7 +105,7 @@ def admin_logout(request):
     return redirect('admin-login')
 
 def userlist(request):
-    user=CustomUser.objects.all()
+    user=CustomUser.objects.all().order_by('date_joined')
     context={
         'users':user
     }
@@ -146,12 +147,6 @@ def block_category(request,id):
     category.block()
     category.save
     return redirect('categories')
-
-
-# def delete_category(requset,id):
-#     category=get_object_or_404(Category,pk=id)
-#     category.delete()
-#     return redirect('categories')
 
 def add_category(request):
     if request.method=='POST':
@@ -233,7 +228,7 @@ def add_product(request):
 
 def delete_product(request,id):
     product=get_object_or_404(Product,id=id)
-    product.delete()
+    product.soft_delete()
     return redirect('product')
 
 def edit_product(request,id):
@@ -280,34 +275,6 @@ def add_variant(request,id):
     }
     return render(request,'admin/add-variant.html',context)
 
-# def add_variant(request, id):
-#     product = Product.objects.get(pk=id)
-    
-#     if request.method == 'POST':
-#         sizes = request.POST.getlist('size')
-#         prices = request.POST.getlist('price')
-#         stocks = request.POST.getlist('stock')
-        
-#         for size, price, stock in zip(sizes, prices, stocks):
-#             # Check if a ProductSize object with the same size and product already exists
-#             if ProductSize.objects.filter(size=size, product=product).exists():
-#                 messages.error(request, f"A variant with size {size} already exists for this product.")
-#             else:
-#                 # Create ProductSize object if no duplicate size found
-#                 size_product = ProductSize.objects.create(
-#                     size=size, price=float(price), stock=int(stock), product=product
-#                 )
-        
-#         messages.success(request, 'Variants added successfully')
-#         return redirect(reverse('add-variant', args=[product.id]))
-    
-#     context = {
-#         'product': product
-#     }
-#     return render(request, 'admin/add-variant.html', context)
-
-
-
 def edit_variant(request,variant_id):
     variant=ProductSize.objects.get(id=variant_id)
     product=variant.product
@@ -326,7 +293,7 @@ def edit_variant(request,variant_id):
 
 def delete_variant(request,id):
     variant=get_object_or_404(ProductSize,pk=id)
-    variant.delete()
+    variant.soft_delete()
     return redirect('product')
 
 def product_image(request,id):
@@ -382,15 +349,15 @@ def order_details(request,id):
 
 def sales_report(request):
     order_items=OrderProduct.objects.all()
-    # for items in order_items:
-    #     sub_total=items.product_price*items.quantity
-    #     tax=(5*sub_total)/100
-    #     total=sub_total+tax
+    for items in order_items:
+        sub_total=items.product_price*items.quantity
+        tax=(5*sub_total)/100
+        total=sub_total+tax
     context={
         'order_items':order_items,
-        # 'sub_total':sub_total,
-        # 'tax':tax,
-        # 'total':total,
+        'sub_total':sub_total,
+        'tax':tax,
+        'total':total,
     }
     return render(request,'admin/sales-report.html',context)
 

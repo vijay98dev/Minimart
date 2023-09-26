@@ -43,8 +43,8 @@ def cart(request,total=0,quantity=0,cart_items=None):
             tax+=cart_item.tax()
             if cart.coupon: 
                 discount=cart_item.discount_amount()
-        
-            grand_total=cart_item.total_after_discount()
+            
+            grand_total=total+tax-discount
             
 
     except ObjectDoesNotExist:
@@ -189,10 +189,8 @@ def coupon_list(request):
     user=request.user
     user_coupons=UserCoupons.objects.filter(user=user)
     unused_coupons = Coupons.objects.exclude(usercoupons__is_used=True)
-
     context={
         'unused_coupons':unused_coupons,
         'user_coupons':user_coupons
-
     }
     return render(request,'user/coupon-list.html',context)

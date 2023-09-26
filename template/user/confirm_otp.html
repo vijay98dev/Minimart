@@ -13,7 +13,7 @@
           <div class="card-body">
           <h4 class="card-title mb-4">OTP Verify</h4>
           {% include 'include/alerts.html' %}
-          <form action="{% url 'confirm_otp'  %}" method="POST">
+          <form action="{% url 'confirm_otp' user.id %}" method="POST">
             {% csrf_token %}
               <div class="form-group">
                  <input type="text" class="form-control" placeholder="Enter your OTP" name='otp-verify' >
