@@ -48,7 +48,7 @@
               </div>
 
               <div
-                class="col-md-2 text-center d-flex flex-column justify-content-center align-items-center"
+                class="col-md-2 text-center d-flex flex-column justify-content-center align-items-center p-2"
               >
                 {% comment %} {% if product.order_status == 'Delivered' %}
                 <form
@@ -67,12 +67,15 @@
                   <button type="submit" class="btn-info">Cancel</button>
                 </form> {% endcomment %}
 
-                {% if product.order_status == 'Cancelled' %}
+                {% if order.status == 'Cancelled' %}
 
                 <p class="text-muted mb-0 small">
                   Product has been cancelled
                 </p>
-
+                {% elif order.status == 'Delivered' %}
+                <p class="text-muted mb-0 small">
+                  Product has been Delivered
+                </p>
                 {% else %}
                 <form
                   method="post"

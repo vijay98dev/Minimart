@@ -128,13 +128,16 @@ def create_order(request,total=0):
             order.save()
             for items in CartItems.objects.all():
                 product=items.product
+                product_stock=product.stock-items.quantity
+                print(product_stock)
+                product.stock=product_stock
+                product.save()
                 image=ProductImage.objects.get(product_size=product)
                 if product.offer_price==0:
                     order_items=OrderProduct.objects.create(order=order,payment=payment,user=user,product=product,product_image=image,quantity=items.quantity,product_price=items.product.price,sub_total=items.sub_total(),tax=items.tax(),discount=items.discount_amount(),total=(items.sub_total()+items.tax()-items.discount_amount()))
                 else:
                     order_items=OrderProduct.objects.create(order=order,payment=payment,user=user,product=product,product_image=image,quantity=items.quantity,product_price=items.product.offer_price,sub_total=items.sub_total(),tax=items.tax(),discount=items.discount_amount(),total=(items.sub_total()+items.tax()-items.discount_amount()))
         # if 'payment_submit' in request.POST:
-        #     print("else payment")
         #     payment_method=request.POST.get('pay-method')
         if 'payment_submit' in request.POST:
             payment_method='razorpay'
@@ -147,18 +150,13 @@ def create_order(request,total=0):
                 payment=Payment.objects.get(order=order)
 
                 return redirect('confirmation-cod' ,order.id)
-    print('11111111111111111111111111111111111111111111111111111111')
     try:
         payment=Payment.objects.get(order=order)
-        print('2222222222222222222222222')
     except Payment.DoesNotExist:
-        print('2222222222222222222222222')
         load_dotenv()
         client=razorpay.Client(auth=(os.getenv('RAZOR_PAY_KEY_ID'),os.getenv('KEY_SECRET')))
         razorpay_payment=client.order.create({'amount':grand_total*100 , 'currency':'INR', 'payment_capture':1})
-        print(razorpay_payment)
         payment=Payment.objects.create(user=user,payment_method='razorpay',amount_paid=grand_total,razor_pay_order_id=razorpay_payment['id'],order=order)
-        print(payment.id)
         payment.save()
 # payment=Payment(user=user,)
     # cart=Cart.objects.get(user=request.user)
@@ -187,15 +185,11 @@ def confirmation_cod(request,id):
 def my_order(request):
     user=request.user
     order=Order.objects.filter(user=user).order_by('-created_at')
-    print(order)
     for item in order:
         quantity=0
         order_items=OrderProduct.objects.filter(order=item).order_by('-created_at')
-        print(order_items)
         for i in order_items:
-            quantity+=i.quantity
-            print(quantity)
-        
+            quantity+=i.quantity        
     context={
         'user':user,
         'order':order,
@@ -209,9 +203,19 @@ def order_details(request,id):
     order=Order.objects.get(pk=id)
     try:
         order_items=OrderProduct.objects.filter(order=id)
-        
+        # if order.status== 'Delivered':
+        #     items=OrderProduct.objects.filter(order=order)
+        #     for i in items:
+        #         products=ProductSize.objects.filter(id=i.product_id)
+        #         print(products)
+        #         for product in products:
+        #             product_stock=product.stock-i.quantity
+        #             print(product_stock)
+        #             product.stock=product_stock
+        #             product.save()
         payment=Payment.objects.get(order=id)
     except OrderProduct.DoesNotExist:
+        
         order.delete()
         return redirect('my-order')
     context={
@@ -240,9 +244,10 @@ def cancel_items(request,id):
     if request.method == 'POST':
         order_item = OrderProduct.objects.get(pk=id)
         if order_item:
-            order_item.order.status = 'Cancelled'
+            order=Order.objects.get(id=order_item.order_id)
+            order_item.status = 'Cancelled'
             order_item.save()
-            product = order_item.product
+            product= order_item.product
             product.stock += order_item.quantity
             product.save()
-        return redirect('myorders')
+        return redirect('my-order')

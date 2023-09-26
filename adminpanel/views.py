@@ -388,6 +388,7 @@ def update_order(request,id):
             order.is_paid=False
             order.save()
     for items in order_items:
+        items.status=status
         items.payment=payment
         items.save()
     return redirect('order')

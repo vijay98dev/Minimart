@@ -62,8 +62,18 @@ class Order(models.Model):
 
 
 class OrderProduct(models.Model):
+    ORDER_STATUS = (
+    ('Processing','Processing'),
+    ('Pending', 'Pending'),
+    ('Confirmed', 'Confirmed'),
+    ('Cancelled', 'Cancelled'),
+    ('Out for Delivery', 'Out for Delivery'),
+    ('Delivered', 'Delivered'),
+   )
+        
     order=models.ForeignKey("orders.Order",  on_delete=models.CASCADE)
     payment=models.ForeignKey("orders.Payment", on_delete=models.SET_NULL,null=True)
+    status=models.CharField( max_length=50,choices=ORDER_STATUS,default='Processing')
     user=models.ForeignKey("account.CustomUser",  on_delete=models.CASCADE)
     product=models.ForeignKey("store.ProductSize",  on_delete=models.CASCADE)
     product_image=models.ForeignKey("store.ProductImage",  on_delete=models.CASCADE)

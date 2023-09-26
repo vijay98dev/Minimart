@@ -14,6 +14,7 @@ from orders.models import Order,OrderProduct
 def register(request):
     if request.method=='POST':
         form=RegistrationForm(request.POST)
+        users=CustomUser.objects.all()
         if form.is_valid():
             first_name=form.cleaned_data['first_name']
             last_name=form.cleaned_data['last_name']
@@ -21,12 +22,16 @@ def register(request):
             phone_number=form.cleaned_data['phone_number']
             password=form.cleaned_data['password']
             username=email.split("@")[0]
-            
-            user=CustomUser.objects.create_user(first_name=first_name,last_name=last_name,email=email,username=username,password=password,phone_number=phone_number)
-            # user.phone_number=phone_number
-            # user.save()
-            messages.success(request,'Registration Sucessful')
-            return redirect('signin')
+            if email == user.email:
+                messages.info(request,'Email already taken')
+                return redirect('register')
+            elif phone_number == user.phone_number:
+                messages.info(request,'Phone number already exists')
+                return redirect('register')
+            else:
+                user=CustomUser.objects.create_user(first_name=first_name,last_name=last_name,email=email,username=username,password=password,phone_number=phone_number)
+                messages.success(request,'Registration Sucessful')
+                return redirect('signin')
     else:
         form=RegistrationForm()
     context={
