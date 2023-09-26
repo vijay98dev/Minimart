@@ -1,6 +1,6 @@
 {% extends 'user/base.html' %}
 {% load static %}
-{% block title %}Signin{% endblock title %}
+{% block title %}Verify Number{% endblock title %}
 {% block navbar %}{% endblock navbar %}
 {% block content %}
 
@@ -10,24 +10,13 @@
     <!-- ============================ COMPONENT LOGIN   ================================= -->
         <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
           <div class="card-body">
-          <h4 class="card-title mb-4">Sign in</h4>
+          <h4 class="card-title mb-4">Verify Number</h4>
           {% include 'include/alerts.html' %}
-          <form action="{% url 'signin' %}" method="POST">
+          <form action="{% url 'verify_number' %}" method="POST">
             {% csrf_token %}
               <div class="form-group">
-                 <input type="email" class="form-control" placeholder="Email Address" name='email' >
-              </div> <!-- form-group// -->
-              {% comment %} <div class="form-group">
                  <input type="text" class="form-control" placeholder="Phone Number" name='phone_number' >
-              </div> <!-- form-group// --> {% endcomment %}
-              <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password" name='password' >
               </div> <!-- form-group// -->
-              
-              <div class="form-group">
-                  <a href="{% url "verify_number" %}" class="float-right">Forgot password?</a> 
-               
-              </div> <!-- form-group form-check .// -->
               <div class="form-group">
                   <button type="submit" class="btn btn-primary btn-block"> Verify </button>
               </div> <!-- form-group// -->    

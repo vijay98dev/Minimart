@@ -7,23 +7,21 @@ from django.db.models import Q
 
 # Create your views here.
 def index(request):
+    user=request.user
+    print(user)
     product=Product.objects.all().filter(Q(is_available=True) &Q(offer_applied=False))
-    print(product)
     try:
         offers=CategoryOffer.objects.all().filter(is_active=True)
-        print(offers)
         # Loop through all the offers present
         for offer in offers:
             category_offer=offer.category
             offer_discount=offer.discount_percentage
             # products that falls under the offer
             offer_products=Product.objects.filter(category=category_offer)
-            print(offer_products)
             for products in offer_products:
                 products.offer_applied=True
                 products.save()
                 variant=ProductSize.objects.filter(product=products)
-                print(variant)
                 for items in variant:
                     items.offer_price = items.price - (items.price * offer_discount / 100)
                     items.save()

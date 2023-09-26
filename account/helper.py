@@ -1,7 +1,8 @@
 from django.conf import settings
 from twilio.rest import Client
 import random
-
+from dotenv import load_dotenv
+import os
 
 
 class MessageHandler:
@@ -12,11 +13,11 @@ class MessageHandler:
         self.otp=otp
 
     def send_otp_on_phone(self):
-        client=Client(settings.ACCOUNT_SID,settings.AUTH_TOKEN)
+        load_dotenv()
+        client=Client(os.getenv('ACCOUNT_SID'),os.getenv('AUTH_TOKEN'))
         message=client.messages.create(
             body=f"Your MiniMart verification code is:{self.otp}",
             from_="+12292672903",
             to='+91'+self.phone_number
         )
-        print(message.sid)
         
