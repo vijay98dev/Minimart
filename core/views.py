@@ -9,6 +9,7 @@ from django.db.models import Q
 def index(request):
     user=request.user
     print(user)
+    offer_products=None
     product=Product.objects.all().filter(Q(is_available=True) &Q(offer_applied=False))
     try:
         offers=CategoryOffer.objects.all().filter(is_active=True)
