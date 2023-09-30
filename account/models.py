@@ -6,7 +6,7 @@ import uuid
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self,first_name,last_name,username,email,password=None):
+    def create_user(self,first_name,last_name,phone_number,username,email,password=None):
         if not email:
             raise ValueError('Email address is manadatory')
         if not username:
@@ -16,6 +16,7 @@ class CustomUserManager(BaseUserManager):
             username=username,
             first_name=first_name,
             last_name=last_name,
+            phone_number=phone_number,
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -39,7 +40,7 @@ class CustomUser(AbstractBaseUser):
     last_name=models.CharField(max_length=50)
     username=models.CharField(max_length=50,unique=True)
     email=models.EmailField(max_length=50,unique=True)
-    phone_number=models.CharField(max_length=50,blank=False)
+    phone_number=models.CharField(max_length=50,blank=False,unique=True)
     otp=models.CharField(max_length=50,null=True,blank=True)
     uid=models.UUIDField(default=uuid.uuid4)
 
