@@ -37,7 +37,7 @@
     <article class="card mb-4">
     <div class="card-body">
         <h4 class="card-title mb-4">Delivery info</h4>
-        <form action="{% url 'create-order' %}" method="post">
+        <form action="{% url 'place-order' %}" method="post">
         {% csrf_token %}
             <div class='mb-3'>
             <div class='row'>

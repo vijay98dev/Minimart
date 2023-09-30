@@ -60,7 +60,6 @@ def search(request):
             
         products=Product.objects.filter(id__in=product.values('product'))
         product_count=products.count()
-        print(products)
         # category=Category.objects.get(id__in=products)
         # image=ProductImage.objects.filter(product__in=products)
         context={

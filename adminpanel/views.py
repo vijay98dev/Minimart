@@ -74,7 +74,6 @@ def admin_dashboard(request):
         .order_by('created_at__date')
     )
     orders= Order.objects.all().order_by('-created_at')[:10]
-    print(orders)
     # Extract dates and counts for the chart
     dates = [entry['created_at__date'].strftime('%Y-%m-%d') for entry in daily_order_counts]
     counts = [entry['order_count'] for entry in daily_order_counts]
@@ -86,7 +85,6 @@ def admin_dashboard(request):
     Order.objects
     .filter(created_at__range=(month, today))
     .aggregate(total_order_total=Sum('order_total')))['total_order_total']
-    print(total)
 
     context = {
         'dates': dates,
@@ -352,7 +350,7 @@ def sales_report(request):
     end_date_str=request.GET.get('end_date',date.today().strftime('%Y-%m-%d'))
     start_date=datetime.strptime(start_date_str,'%Y-%m-%d')
     end_date=datetime.strptime(end_date_str,'%Y-%m-%d')
-    order_items=OrderProduct.objects.filter(crated_at__range=['start_date','end_date'])
+    order_items=OrderProduct.objects.filter(created_at__range=['start_date','end_date'])
     for items in order_items:
         sub_total=items.product_price*items.quantity
         tax=(5*sub_total)/100

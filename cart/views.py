@@ -74,12 +74,8 @@ def add_cart(request):
     variable=None
     if request.method=='POST':
         size=request.POST.get('size')
-        print(size)
         variable=ProductSize.objects.get(id=size)
-        print(variable)
     product=variable.product
-    print(product)
-         
     try:
         cart=Cart.objects.get(cart_id=_cart_id(request))
     except Cart.DoesNotExist:
@@ -92,7 +88,6 @@ def add_cart(request):
     else:
         if cart_item:
             cart_item=CartItems.objects.get(product=variable,cart=cart)
-            print(cart_item)
             
             if cart_item.quantity<variable.stock:
                 cart_item.quantity += 1
@@ -120,7 +115,6 @@ def add_cart_items(request,product_id):
     else:
         if cart_item:
             cart_item=CartItems.objects.get(product=variable,cart=cart)
-            print(cart_item)
             if cart_item.quantity<variable.stock:
                 cart_item.quantity += 1
             else:
@@ -157,11 +151,8 @@ def remove_cart_items(request,product_id):
 def wishlist(request):
     wishlist=Wishlist.objects.filter(user=request.user)
     products=Product.objects.filter(id__in=wishlist.values('product'))
-    print(products)
     product_images = ProductImage.objects.filter(product__in=products).first()
     variant=ProductSize.objects.filter(product__in=products).first()
-    print(variant)
-    
     context={
         'wishlist':wishlist,  
         'variant':variant,  

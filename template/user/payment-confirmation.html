@@ -57,13 +57,21 @@
               </p>
             </div>
             <div>
-              <form action="{% url 'create-order' %}" method="post">
+              <form action="{% url 'confirmation' %}" method="post">
                 {% csrf_token %}
                 <h5 class="font-size-14 mb-3">Payment methods :</h5>
               <div class="row">
                 <div class="col-lg-3 col-sm-6">
                   <div>
-                    <label class="card-radio-label">
+                    <button
+                    type="submit"
+                    name="pay-method"
+                    value="cod"
+                    class='btn btn-sm'
+                  >
+                  Cash on Delivery
+                  </button>
+                    {% comment %} <label class="card-radio-label">
                       <input
                         type="radio"
                         name="pay-method"
@@ -75,13 +83,23 @@
                         <i class="bx bx-money d-block h2 mb-3"></i>
                         <span>Cash on Delivery</span>
                       </span>
-                    </label>
+                    </label> {% endcomment %}
                   </div>
                 </div>
   
                 <div class="col-lg-3 col-sm-6">
                   <div>
-                    <label class="card-radio-label card-radio-button-label">
+                    <button
+                    type="button"
+                    type="submit"
+                    name="pay-method"
+                    id="rzp-button1"
+                    value="razorpay"
+                    class='btn btn-sm'
+                  >
+                  Razorpy
+                  </button>
+                    {% comment %} <label class="card-radio-label card-radio-button-label">
                       <input
                         type="radio"
                         name="pay-method"
@@ -94,12 +112,12 @@
                         <i class="bx bx-money d-block h2 mb-3"></i>
                         <span>Razorpay</span>
                       </span>
-                    </label>
+                    </label> {% endcomment %}
                   </div>
                 </div>
               </div>
               <br>
-              <button type="submit" class="btn btn-primary btn-sm" name="payment_submit">Place Order</button>
+              {% comment %} <button type="submit" class="btn btn-primary btn-sm" name="payment_submit">Place Order</button> {% endcomment %}
             </form>
             </div>
           </div>
@@ -129,7 +147,7 @@
     <script>
     var options = {
         "key": "rzp_test_Yhyp50af6R4HJ6", // Enter the Key ID generated from the Dashboard
-        "amount": "{{razorpay_payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "amount": "{{amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
         "currency": "INR",
         "name": "MiniMart",
         "description": "Thanks",
@@ -137,7 +155,7 @@
         "order_id": "{{razorpay_payment.id}}", 
         "handler": function (response){
     
-        window.location.href = `http://127.0.0.1:8000/razorpay_payment/?razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`;
+        window.location.href = `http://127.0.0.1:8000/confirmation/?razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`;
     
            
         },

@@ -72,7 +72,6 @@ def confirm_otp(request,id):
     user=CustomUser.objects.get(id=id)
     if request.method=='POST':
         otp=request.POST.get('otp-verify')
-        print(otp)
         if otp == user.otp:
             return redirect (reverse('change_password', args=[user.id]))
 
@@ -80,7 +79,6 @@ def confirm_otp(request,id):
 
 def change_password(request,id):
     user=CustomUser.objects.get(id=id)
-    print(user)
     if request.method=='POST':
         new_password=request.POST.get('password')
         confirm_password=request.POST.get('confirm_password')
@@ -88,7 +86,6 @@ def change_password(request,id):
             user.set_password(new_password)
             user.save()
             password=user.password
-            print(password)
             return redirect('signin')
         else:
             messages.error(request,"Password doesn't match")
