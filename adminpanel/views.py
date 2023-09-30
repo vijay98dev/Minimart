@@ -348,7 +348,11 @@ def order_details(request,id):
 
 
 def sales_report(request):
-    order_items=OrderProduct.objects.all()
+    start_date_str=request.GET.get('start_date',date.today().strftime('%Y-%m-%d'))
+    end_date_str=request.GET.get('end_date',date.today().strftime('%Y-%m-%d'))
+    start_date=datetime.strptime(start_date_str,'%Y-%m-%d')
+    end_date=datetime.strptime(end_date_str,'%Y-%m-%d')
+    order_items=OrderProduct.objects.filter(crated_at__range=['start_date','end_date'])
     for items in order_items:
         sub_total=items.product_price*items.quantity
         tax=(5*sub_total)/100

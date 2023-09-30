@@ -9,6 +9,8 @@
   <div class="card mx-auto" style="max-width: 900px; margin-top: 100px">
     <div class="card-body">
       <h4 class="card-title mb-4">Sales Report</h4>
+      <input type="date" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}">
+      <input type="date" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}">
       <button class="btn btn-primary" onclick="exportToExcel()">
         Excel &nbsp<i class="far fa-file-pdf text-light"></i>
       </button>
@@ -75,7 +77,7 @@
       }).join('\n');
   
       // Create a Blob containing the CSV data
-      var blob = new Blob([csvContent], { type: 'text/csv' });
+      var blob = new Blob([csvContent], { type: 'text/excel' });
   
       // Create a link to download the Blob as a file
       var link = document.createElement('a');
@@ -97,6 +99,19 @@
 
 <script>
   document.getElementById("pdfButton").addEventListener("click", function () {
+    const start_date = document.getElementById('start_date').value;
+    const end_date = document.getElementById('end_date').value;
+
+    // Fetch data based on the selected date range
+    fetch(`/sales-report/?start_date=${start_date}&end_date=${end_date}`)
+        .then(response => response.text())
+        .then(html => {
+            // Generate and download the PDF
+            // ...
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     const table = document.querySelector(".table");
     const pdfOptions = {
       margin: 5.25,

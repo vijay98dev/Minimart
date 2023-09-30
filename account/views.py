@@ -12,6 +12,7 @@ from orders.models import Order,OrderProduct
 
 # Create your views here.
 def register(request):
+    user=request.user
     if request.method=='POST':
         form=RegistrationForm(request.POST)
         users=CustomUser.objects.all()

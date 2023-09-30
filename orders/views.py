@@ -60,7 +60,7 @@ def checkout(request,total=0,quantity=0):
     return render(request,'user/checkout.html',context)
 
 
-def confirmation(request):
+def razorpay_payment(request):
     order_id=request.GET.get('razorpay_order_id')
     payment_id=request.GET.get('razorpay_payment_id')
     signature=request.GET.get('razorpay_signature')
@@ -142,22 +142,19 @@ def create_order(request,total=0):
         if 'payment_submit' in request.POST:
             payment_method='razorpay'
             order = Order.objects.filter(user=user).order_by('-created_at').first()
-            
             payment_method=request.POST.get('pay-method')
             if payment_method=='cod':
-                payment=Payment.objects.create(user=user,payment_method=payment_method,order=order)
-                payment.save()
-                payment=Payment.objects.get(order=order)
-
-                return redirect('confirmation-cod' ,order.id)
-    try:
-        payment=Payment.objects.get(order=order)
-    except Payment.DoesNotExist:
-        load_dotenv()
-        client=razorpay.Client(auth=(os.getenv('RAZOR_PAY_KEY_ID'),os.getenv('KEY_SECRET')))
-        razorpay_payment=client.order.create({'amount':grand_total*100 , 'currency':'INR', 'payment_capture':1})
-        payment=Payment.objects.create(user=user,payment_method='razorpay',amount_paid=grand_total,razor_pay_order_id=razorpay_payment['id'],order=order)
-        payment.save()
+                try:
+                    payment=Payment.objects.get(order=order)
+                except Payment.DoesNotExist:
+                    payment=Payment.objects.create(user=user,payment_method=payment_method,order=order)
+                    payment.save()
+                return redirect('confirmation' ,order.id)
+    load_dotenv()
+    client=razorpay.Client(auth=(os.getenv('RAZOR_PAY_KEY_ID'),os.getenv('KEY_SECRET')))
+    razorpay_payment=client.order.create({'amount':order.order_total*100 , 'currency':'INR', 'payment_capture':1})
+    payment=Payment.objects.create(user=user,payment_method='razorpay',amount_paid=order.order_total,razor_pay_order_id=razorpay_payment['id'],order=order)
+    payment.save()
 # payment=Payment(user=user,)
     # cart=Cart.objects.get(user=request.user)
     # cart_items=CartItems.objects.filter(cart=cart)
@@ -173,13 +170,12 @@ def create_order(request,total=0):
     }
     return render(request,'user/payment-confirmation.html',context)
 
-
-def confirmation_cod(request,id):
+def confirmation(request,id):
     order=Order.objects.get(pk=id)
     context={
         'order':order
     }
-    return render(request,'user/confirmation-cod.html',context)
+    return render(request,'user/confirmation.html',context)
 
 @login_required
 def my_order(request):
