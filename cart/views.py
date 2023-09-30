@@ -86,19 +86,24 @@ def add_cart(request):
         cart=Cart.objects.create(cart_id=_cart_id(request),user=request.user)
     cart.save()
     cart_item=CartItems.objects.filter(product=variable,cart=cart).exists()
-    if cart_item:
-        cart_item=CartItems.objects.get(product=variable,cart=cart)
-        print(cart_item)
-        if cart_item.quantity<variable.stock:
-            cart_item.quantity += 1
-        else:
-            cart_item.quantity=variable.stock
-            messages.error(request,'Product has reached its maximum stock')
-        cart_item.save()
+    if variable.stock <= 0:
+            messages.info(request,'!! Product is out of stock right now !!')
+            return redirect ('store')
     else:
-        cart_item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
-        cart_item.save()
-    return redirect('cart')
+        if cart_item:
+            cart_item=CartItems.objects.get(product=variable,cart=cart)
+            print(cart_item)
+            
+            if cart_item.quantity<variable.stock:
+                cart_item.quantity += 1
+            else:
+                cart_item.quantity=variable.stock
+                messages.error(request,'Product has reached its maximum stock')
+            cart_item.save()
+        else:
+            cart_item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
+            cart_item.save()
+        return redirect('cart')
 
 @login_required
 def add_cart_items(request,product_id):
@@ -109,19 +114,23 @@ def add_cart_items(request,product_id):
         cart=Cart.objects.create(cart_id=_cart_id(request),user=request.user)
     cart.save()
     cart_item=CartItems.objects.filter(product=variable,cart=cart).exists()
-    if cart_item:
-        cart_item=CartItems.objects.get(product=variable,cart=cart)
-        print(cart_item)
-        if cart_item.quantity<variable.stock:
-            cart_item.quantity += 1
-        else:
-            cart_item.quantity=variable.stock
-            messages.error(request,'Product has reached its maximum stock')
-        cart_item.save()
+    if variable.stock <= 0:
+            messages.info(request,'!! Product is out of stock right now !!')
+            return redirect ('store')
     else:
-        cart_item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
-        cart_item.save()
-    return redirect('cart')
+        if cart_item:
+            cart_item=CartItems.objects.get(product=variable,cart=cart)
+            print(cart_item)
+            if cart_item.quantity<variable.stock:
+                cart_item.quantity += 1
+            else:
+                cart_item.quantity=variable.stock
+                messages.error(request,'Product has reached its maximum stock')
+            cart_item.save()
+        else:
+            cart_item=CartItems.objects.create(product=variable,quantity=1,cart=cart)
+            cart_item.save()
+        return redirect('cart')
 
 @login_required
 def remove_cart(request,product_id):

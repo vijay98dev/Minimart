@@ -44,5 +44,6 @@ urlpatterns = [
 
     path('offers/',views.offers,name='offers'),
     path('add-offer/',views.add_offer,name='add-offer'),
+    path('delete-offer/',views.delete_offer,name='delete-offer'),
  
 ]

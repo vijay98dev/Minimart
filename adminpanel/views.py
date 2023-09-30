@@ -440,13 +440,11 @@ def edit_coupon(request,id):
         description=request.POST.get('description')
         minimum=request.POST.get('minimum_amount')
         discount=request.POST.get('discount')
-       
-
         coupon.description=description
         coupon.minimum_amount=minimum
         coupon.discount=discount
-       
         coupon.save()
+        messages.info(request,'Coupon edited')
         return redirect('coupon')
     context={
         'coupon':coupon
@@ -456,6 +454,7 @@ def edit_coupon(request,id):
 def delete_coupon(request,id):
     coupon=Coupons.objects.get(pk=id)
     coupon.delete()
+    messages.info(request,'Coupon deleted')
     return redirect('coupon')
 
 
@@ -479,12 +478,20 @@ def add_offer(request):
         except Category.DoesNotExist:
             messages.error(request,'Invalid category selected')
             return redirect('add-offer')
-        # product=Product.objects.get(category=cat)
         if  CategoryOffer.objects.filter(Q(offer_name=offer_name) &Q(category=category)):
             messages.warning(request,'Offer already exist')
         else:
             offer=CategoryOffer.objects.create(offer_name=offer_name,valid_to=expires_on,category=cat,discount_percentage=discount_percentage)
+            messages.info(request,'Offer added')
+            return redirect('offer')
     context={
         'categories':categories
     }
     return render(request,'admin/add-offer.html',context)
+
+
+def delete_offer(request,id):
+    offer=CategoryOffer.objects.get(pk=id)
+    offer.delete()
+    messages.info(request,'Offer deleted')
+    return redirect ('offer')
