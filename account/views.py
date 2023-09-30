@@ -12,7 +12,6 @@ from orders.models import Order,OrderProduct
 
 # Create your views here.
 def register(request):
-    user=request.user
     if request.method=='POST':
         form=RegistrationForm(request.POST)
         users=CustomUser.objects.all()
@@ -23,10 +22,10 @@ def register(request):
             phone_number=form.cleaned_data['phone_number']
             password=form.cleaned_data['password']
             username=email.split("@")[0]
-            if email == user.email:
+            if email == users.email:
                 messages.info(request,'Email already taken')
                 return redirect('register')
-            elif phone_number == user.phone_number:
+            elif phone_number == users.phone_number:
                 messages.info(request,'Phone number already exists')
                 return redirect('register')
             else:
