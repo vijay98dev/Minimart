@@ -36,7 +36,6 @@ def product_details(request,category_slug,product_slug):
         in_offer=None
         if single_product.offer_applied==True:
             in_offer=True
-        # in_cart=CartItems.objects.filter(cart__cart_id=_cart_id(request),product=size).exists()
         in_whishlist=Wishlist.objects.filter(user=request.user,product=single_product).exists()
     except ProductImage.DoesNotExist:
         raise Http404("Product not found")
@@ -56,12 +55,10 @@ def search(request):
     if 'keyword' in request.GET:
         keyword=request.GET['keyword']
         if keyword:
-            product=ProductImage.objects.filter(Q(product__product_name__icontains=keyword) | Q(product__description__icontains=keyword) | Q(product__category__category_name__icontains=keyword) | Q(product_size__price__icontains=keyword))
+            product=ProductSize.objects.filter(Q(product__product_name__icontains=keyword) | Q(product__description__icontains=keyword) | Q(product__category__category_name__icontains=keyword) | Q(price__icontains=keyword))
             
-        products=Product.objects.filter(id__in=product.values('product'))
+        products=Product.objects.filter(id__in=product.values('product'),is_available=True)
         product_count=products.count()
-        # category=Category.objects.get(id__in=products)
-        # image=ProductImage.objects.filter(product__in=products)
         context={
             'products':products, 
             'product_counts':product_count, 

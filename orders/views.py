@@ -225,7 +225,7 @@ def cancel_order(request,id):
         if order:
             order.status='Cancelled'
             order.save()
-            order_items=OrderProduct.objects.filter(order__in=order)
+            order_items=OrderProduct.objects.filter(order=order)
             for items in order_items:
                 product=items.product
                 product.stock+=items.quantity
@@ -235,7 +235,9 @@ def cancel_order(request,id):
 @login_required
 def cancel_items(request,id):
     if request.method == 'POST':
+        # item=[]
         order_item = OrderProduct.objects.get(pk=id)
+        items=OrderProduct.objects.filter(order=order_item.order)
         if order_item:
             order=Order.objects.get(id=order_item.order_id)
             order_item.status = 'Cancelled'
@@ -243,4 +245,7 @@ def cancel_items(request,id):
             product= order_item.product
             product.stock += order_item.quantity
             product.save()
+            if len(items)==1:
+                order.status='Cancelled'
+                order.save()
         return redirect('my-order')

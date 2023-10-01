@@ -9,8 +9,25 @@
   <div class="card mx-auto" style="max-width: 900px; margin-top: 100px">
     <div class="card-body">
       <h4 class="card-title mb-4">Sales Report</h4>
-      <input type="date" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}">
-      <input type="date" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}">
+      <div class="row align-items-center " >
+        <form action="{% url 'daily' %}" method="post">
+            {% csrf_token %}
+            
+            <span style="float: left; padding: 5px;">From</span>
+            <div class="col-md-2 col-6" style="float: left;" >
+                <input type="date" value="{{ fromDate }}" class="form-control" name="fromDate" required>
+            </div>
+            <span style="float: left; padding: 5px;">To</span>
+            <div class="col-md-2 col-6" style="float: left;">
+                <input type="date" value="{{ toDate }}" class="form-control" name="toDate" required>
+            </div>
+            <div >
+              <button type="submit" class="btn btn-primary rounded font-sm"style=" padding: 4px; margin: 5px;"  >Submit</button>
+          </div>
+         
+      </form>
+      <input type="date" id="start_date" name="start_date" value="{{ start_date }}" required>
+      <input type="date" id="end_date" name="end_date" value="{{ end_date }}" required>
       <button class="btn btn-primary" onclick="exportToExcel()">
         Excel &nbsp<i class="far fa-file-pdf text-light"></i>
       </button>

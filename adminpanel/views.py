@@ -44,22 +44,6 @@ def admin_login(request):
     return render(request,'admin/admin-login.html')
 
 
-# def admin_dashboard(request):
-#     end_date=datetime.now()
-#     start_date = end_date - timedelta(days=30)
-#     product=ProductSize.objects.all()
-#     orders_within_range=Order.objects.filter(created_at__range=(start_date,end_date))
-#     total_amount=orders_within_range.aggregate()
-#     order=Order.objects.all()
-#     order_count=order.count()
-#     context={
-#         'order':order,
-#         'order_count':order_count
-#     }
-#     return render(request,'admin/admin_dashboard.html',context)
-
-
-
 
 def admin_dashboard(request):
     end_date = datetime.now()
@@ -82,9 +66,7 @@ def admin_dashboard(request):
     today = datetime.now()
     month=end_date-timedelta(days=30)
     total=(
-    Order.objects
-    .filter(created_at__range=(month, today))
-    .aggregate(total_order_total=Sum('order_total')))['total_order_total']
+    Order.objects.filter(created_at__range=(month, today)).aggregate(total_order_total=Sum('order_total')))['total_order_total']
 
     context = {
         'dates': dates,
@@ -209,12 +191,9 @@ def add_product(request):
             if size:
                 size=float(size)
             product = Product.objects.create(product_name=product_name,description=description,category=selected_category)
-            # product.save()
             size_product=ProductSize.objects.create(price=price,stock=stock,product_size=size,product=product)
-            # size_product.save()
             for images in uploaded_image:
                 images=ProductImage.objects.create(product_image=images,product=product,product_size=size_product)
-                # images.save()
             messages.success(request,'Product added successfully')
             return redirect('product')
     categories=Category.objects.all()
@@ -346,11 +325,18 @@ def order_details(request,id):
 
 
 def sales_report(request):
-    start_date_str=request.GET.get('start_date',date.today().strftime('%Y-%m-%d'))
-    end_date_str=request.GET.get('end_date',date.today().strftime('%Y-%m-%d'))
-    start_date=datetime.strptime(start_date_str,'%Y-%m-%d')
-    end_date=datetime.strptime(end_date_str,'%Y-%m-%d')
-    order_items=OrderProduct.objects.filter(created_at__range=['start_date','end_date'])
+    if request.method=='POST':
+        from_str=request.POST.get('start_date')
+        to_str=request.POST.get('end_date')
+        end_date=datetime.now(timezone.utc)
+        from_date=datetime.strptime(from_str,"%m%d%Y").strftime("%Y-%m%d %H:%M:%S")
+        to_date=datetime.strptime(to_str,"%m%d%Y").strftime("%Y-%m%d %H:%M:%S")
+    else:
+        from_date=None
+        to_date=None
+    end_date=datetime.now(timezone.utc)
+    week_date=datetime.now(timezone.utc)-timedelta(days=7)
+    order_items=OrderProduct.objects.filter(created_at__range=['from_date','to_date'])
     for items in order_items:
         sub_total=items.product_price*items.quantity
         tax=(5*sub_total)/100
@@ -380,8 +366,8 @@ def update_order(request,id):
     if request.method=='POST':
         status=request.POST.get('order_status')
     order.status=status
-    
     order.save()
+    
     if payment.payment_method=='cod':
         if order.status=='Delivered':
             order.is_paid=True

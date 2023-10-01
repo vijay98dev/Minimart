@@ -97,10 +97,10 @@ def signout(request):
     messages.success(request,"Logout was successful.")
     return redirect('signin')
 
-
+@login_required
 def profile(request):
     user=request.user
-    profile=UserProfile.objects.filter(user=user)
+    profile=UserProfile.objects.filter(user_id=user.id)
     if profile.exists():
         profile=profile.all()
     else:
@@ -192,6 +192,7 @@ def delete_address(request,id):
 
 def reset_password(request):
     user=request.user
+    print(user)
     if request.method=='POST':
         current=request.POST.get('current_password')
         new=request.POST.get('new_password')
@@ -201,7 +202,7 @@ def reset_password(request):
                 user.set_password(new)
                 user.save()
                 messages.success(request,'Password Reset Successful')
-                return redirect('profile')
+                return redirect('signin')
             else:
                 messages.error(request,'Entered password does not match')
                 return redirect('reset')
