@@ -41,7 +41,72 @@
   </div>
   
     </div>
-    
+    {% comment %} <div class="video" style="margin-top: 50px">
+      <h6>Order ID : #{{order.order_number}}</h6>
+  
+  <h5>Deliver to:</h5>
+  <div style="padding-left:80px;">
+  <h6>{{address.first_name}}{{address.last_name}}</h6>
+  <h6>{{address.address}}</h6>
+  <h6>{{address.city}},{{address.street}}</h6>
+  <h6>{{address.state}},{{address.country}}</h6>
+  <h6>{{address.pin_code}}</h6>
+  <p class="text-center">
+    Expected delivery by 05/10/2023
+  </p>
+  </div>
+  <h5>Order summary:</h5>
+  <div class="table-responsive">
+    <table
+      class="table align-middle table-nowrap table-centered mb-0"
+    >
+      <thead>
+        <tr>
+          <th style="width: 70px">No.</th>
+          <th>Item</th>
+          <th>Quantity</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <!-- end thead -->
+      <tbody>
+        {% for order_item in order_items %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>
+            <div>
+              <h5 class="text-truncate font-size-14 mb-1">
+                {{order_item.product.product.product_name}}
+              </h5>
+              <p class="text-muted mb-0">
+                {{order_item.product.size}}
+              </p>
+            </div>
+          </td>
+          <td>{{order_item.quantity}}</td>
+          <td>₹ {{order_item.product_price}}</td>
+        </tr>
+        {% endfor %}
+        
+        <tr>
+          <th scope="row" colspan="4" class="border-0 text-end">
+            Total
+          </th>
+          <td class="border-0 text-end">
+            <h4 class="m-0 fw-semibold">
+              {{order.order_total}}
+            </h4>
+          </td>
+        </tr>
+        <!-- end tr -->
+      </tbody>
+      <!-- end tbody -->
+    </table>
+    <!-- end table -->
+  </div> {% endcomment %}
+  
+  
+    </div>
     {% comment %} <div class="video" style="margin-top: 50px;">
 
       <a href="" class="button-link">Invoice</a>

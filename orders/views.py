@@ -134,7 +134,6 @@ def confirmation(request,total=0):
     order.save()
     for items in CartItems.objects.all():
         product=items.product
-        print(product.id)
         product_stock=product.stock-items.quantity
         product.stock=product_stock
         product.save()

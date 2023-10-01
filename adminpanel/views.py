@@ -326,17 +326,16 @@ def order_details(request,id):
 
 def sales_report(request):
     if request.method=='POST':
-        from_str=request.POST.get('start_date')
-        to_str=request.POST.get('end_date')
-        end_date=datetime.now(timezone.utc)
-        from_date=datetime.strptime(from_str,"%m%d%Y").strftime("%Y-%m%d %H:%M:%S")
-        to_date=datetime.strptime(to_str,"%m%d%Y").strftime("%Y-%m%d %H:%M:%S")
+      from_date_str=request.POST.get('fromDate')
+      to_date_str=request.POST.get('toDate')
+      from_date=datetime.strptime(from_date_str,"%Y-%m-%d").strftime("%Y-%m-%d %H:%M:%S")
+      to_date=datetime.strptime(to_date_str,"%Y-%m-%d").strftime("%Y-%m-%d %H:%M:%S")
     else:
         from_date=None
         to_date=None
-    end_date=datetime.now(timezone.utc)
-    week_date=datetime.now(timezone.utc)-timedelta(days=7)
-    order_items=OrderProduct.objects.filter(created_at__range=['from_date','to_date'])
+    orders=Order.objects.filter(created_at__range=(from_date,to_date))
+    print(orders)
+    order_items=OrderProduct.objects.filter(order__in=orders)
     for items in order_items:
         sub_total=items.product_price*items.quantity
         tax=(5*sub_total)/100
