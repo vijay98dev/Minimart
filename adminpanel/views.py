@@ -336,6 +336,9 @@ def sales_report(request):
     orders=Order.objects.filter(created_at__range=(from_date,to_date))
     print(orders)
     order_items=OrderProduct.objects.filter(order__in=orders)
+    sub_total=0
+    tax=0
+    total=0
     for items in order_items:
         sub_total=items.product_price*items.quantity
         tax=(5*sub_total)/100
