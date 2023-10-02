@@ -165,19 +165,30 @@
     <script>
       document.getElementById("pdfButton").addEventListener("click", function () {
         // Create a new jsPDF instance
-        const doc = new jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4',
-        });
+       /// const doc = new jsPDF({
+        ///  orientation: 'portrait',
+        ///  unit: 'mm',
+        ///  format: 'a4',
+       /// });
     
         // Add the HTML content to the PDF
-        doc.html(document.querySelector(".container"), {
-          callback: function (pdf) {
+        ///doc.html(document.querySelector(".container"), {
+        ///  callback: function (pdf) {
             // Save the PDF as "invoice.pdf"
-            pdf.save('invoice.pdf');
-          },
-        });
+         ///   pdf.save('invoice.pdf');
+        ///  },
+       /// }); 
+       console.log('11111')
+      const invoice = document.querySelector(".container");
+    const pdfOptions = {
+      margin: 5,
+      filename: 'invoice.pdf',
+      image: { type: 'jpeg', quality: 0.5 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: 'mm', format: 'a3', orientation: 'portrait' }
+    };
+
+    html2pdf().from(invoice).set(pdfOptions).save();
       });
     </script>
     

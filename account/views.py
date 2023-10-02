@@ -114,6 +114,7 @@ def profile(request):
     }
     return render(request,'user/profile.html',context)
 
+
 def add_address(request):
     user=request.user
     if request.method=='POST':

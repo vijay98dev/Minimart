@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-
+@login_required
 def place_order(request):
     user=request.user
     if request.method == 'POST':
@@ -68,29 +68,6 @@ def checkout(request,total=0,quantity=0):
         'grand_total':grand_total
     }
     return render(request,'user/checkout.html',context)
-
-
-# def razorpay_payment(request):
-#     order_id=request.GET.get('razorpay_order_id')
-#     # payment_id=request.GET.get('razorpay_payment_id')
-#     # signature=request.GET.get('razorpay_signature')
-#     payment=Payment.objects.get(razor_pay_order_id=order_id)
-#     payment.razor_pay_payment_id=payment_id
-#     payment.razor_pay_payment_signature=signature
-#     payment.status='Completed'
-#     payment.save()
-#     order=Order.objects.get(id=payment.order_id)
-#     order.is_paid=True
-#     order.save()
-#     confirmed_payment=Payment.objects.get(razor_pay_order_id=order_id)
-#     order_items=OrderProduct.objects.filter(order=payment.order_id)
-#     for items in order_items:
-#         items.payment=confirmed_payment
-#         items.save()
-#     context={
-#         'order':order
-#     }
-#     return render (request,'user/confirmation.html',context)
 
 
 @login_required
@@ -168,12 +145,6 @@ def confirmation(request,total=0):
     }
     return render(request,'user/confirmation.html',context)
 
-# def confirmation(request):
-#     order=Order.objects.get(pk=id)
-#     context={
-#         'order':order
-#     }
-#     return render(request,'user/confirmation.html',context)
 
 @login_required
 def my_order(request):
@@ -191,6 +162,8 @@ def my_order(request):
         'quantity':quantity,
     }
     return render(request,'user/my-order.html',context)
+
+
 @login_required
 def order_details(request,id):
     user=request.user
@@ -217,6 +190,7 @@ def order_details(request,id):
         'user':user,  
     }
     return render(request,'user/order-details.html',context)
+
 @login_required
 def cancel_order(request,id):
     if request.method=='POST':

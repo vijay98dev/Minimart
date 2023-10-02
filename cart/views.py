@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-
+@login_required
 def cart(request,total=0,quantity=0,cart_items=None):
     user=request.user
     try:
@@ -147,7 +147,7 @@ def remove_cart_items(request,product_id):
     return redirect('cart')
 
 
-
+@login_required
 def wishlist(request):
     wishlist=Wishlist.objects.filter(user=request.user)
     products=Product.objects.filter(id__in=wishlist.values('product'))

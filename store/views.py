@@ -5,6 +5,7 @@ from category.models import Category,CategoryOffer
 from django.http import Http404
 from cart.models import Cart,CartItems,Wishlist
 from cart.views import _cart_id
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def store(request,category_slug=None):
@@ -26,7 +27,7 @@ def store(request,category_slug=None):
     }
     return render(request,'user/store.html',context)
 
-
+@login_required
 def product_details(request,category_slug,product_slug):
     try:
         single_product=Product.objects.get(category__slug=category_slug,slug=product_slug)
